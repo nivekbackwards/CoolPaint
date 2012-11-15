@@ -6,3 +6,14 @@ body {
 a {
   color: #00B7FF;
 }
+
+#message-list {
+  border: 1px dashed black;
+  padding: 5px;
+  width: 325px;
+  list-style-type: none;
+}
+
+#chat-text-area {
+  resize: none;
+}

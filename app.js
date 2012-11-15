@@ -37,7 +37,8 @@ io.sockets.on('connection', function (socket) {
   chatApp.init(socket);
 });
 
-server.listen(40000, function(){
+var port = process.env.PORT || 9001;
+server.listen(port, function(){
   console.log("Express server listening on port %d in %s mode",
               server.address().port, app.settings.env);
 });

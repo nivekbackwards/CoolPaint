@@ -8,7 +8,7 @@
 	<script type="text/javascript" src="/javascripts/chat.js"></script>
 </head>
 <body>
-	<h1>Chat Application With WebSockets</h1>
+	<h1>CoolPaint chat bitches</h1>
 	<div id="chat-app">
 		<textarea id="chat-text-area" rows="5" cols="50"></textarea>
 		<br>

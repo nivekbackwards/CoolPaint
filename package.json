@@ -9,6 +9,7 @@
 	"dependencies": {
       	"express": "3.0.0",
 		"ejs": ">= 0.8.3",
-		"socket.io": ">= 0.9.10"
+		"socket.io": ">= 0.9.10",
+		"jquery" : "*"		
 	}
 }

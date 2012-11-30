@@ -4,5 +4,9 @@
  */
 
 exports.index = function(req, res){
-  res.render('index', { title: 'CoolPaint' });
+  res.render('index', { title: 'Express' })
+};
+
+exports.favicon = function(req, res){
+	res.send("favicon.ico");
 };

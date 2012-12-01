@@ -1,13 +1,26 @@
-var SocketUserMapClass = require('./socketUserMap');
-var socketUserMapping = new SocketUserMapClass();
+/*
+TODO:
+	test code
+	remove throw statements
+*/
 
-var MessageListClass = require('./chatMessages');
-var chatMessageList = new MessageListClass();
+
+var SocketUserMapClass 	= require('./socketUserMap');
+var socketUserMapping 	= new SocketUserMapClass();
+
+var MessageListClass 	= require('./chatMessages');
+var chatMessageList		= new MessageListClass();
+
+//currently not in use
+var WhiteboardObjectsClass 	= require('./whiteboardObjects');
+var whiteboardState 		= new whiteboardObjects;
 
 // Server-side support for chat app:
 exports.init = function (socket) {
+
 	socket.on('loginAttempt', function(data){
 		console.log('user attempting to connect ' + JSON.stringify(data));
+		var username = data.username;
 		if(socketUserMapping.goodName(username)){					// if this username is valid
 			socketUserMapping.addUser(socket, username);				// add username to list
 			socket.emit('loginAlow');									// allow client to login
@@ -22,7 +35,7 @@ exports.init = function (socket) {
 	socket.on('disconnect', function(){
 		var disconnectedUser = removeUsernameCorrespondingToSocket(socket);
 		if(disconnectedUser === null)
-			throw "disconnect failure";
+			throw "disconnect failure, no user found to match socket";
 		socket.broadcast.emit('userLeft', {username : disconnectedUser});
 	});
 

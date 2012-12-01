@@ -1,38 +1,16 @@
+var SocketUserMapClass = require('./socketUserMap');
+var socketUserMapping = new SocketUserMapClass();
 
-
-
-function ChatMessage(from, message){
-	this.from = from;
-	this.message = message;
-	this.time = Date.now();
-};
-
-ChatMessage.prototype.toString = function(){
-	return "" + this.time + " " + this.from + "  :  " + message;
-};
-
-var messageList = [];
-
-/*
-var userList = [];
-
-var goodName = function(username){
-	if($.inArray(data.username, userList)){ 	// if another client is using this username...
-		return false;								// it is not allowed
-	}
-	return true;
-};
-*/
-
-var SocketUserMapping = require('./socketUserMap');
+var MessageListClass = require('./chatMessages');
+var chatMessageList = new MessageListClass();
 
 // Server-side support for chat app:
 exports.init = function (socket) {
 	socket.on('loginAttempt', function(data){
 		console.log('user attempting to connect ' + JSON.stringify(data));
-		if(goodName(username)){										// if this username is valid
-			userList.push(data.username);								// add username to list
-			socket.emit('loginAlow', {username : data.username});		// allow client to login
+		if(socketUserMapping.goodName(username)){					// if this username is valid
+			socketUserMapping.addUser(socket, username);				// add username to list
+			socket.emit('loginAlow');									// allow client to login
 			socket.emit('messages', {messageList: messageList});		// send client list of chat messages
 			//TODO														// send client current state of whiteboard								
 		}
@@ -50,9 +28,12 @@ exports.init = function (socket) {
 
 	socket.on('editUser', function(data){
 		var newUsername = data.newUsername;
-		console.log('user wants to change name');
+		console.log('user wants to change name to [' + newUsername + ']');
 		if(goodName(newUsername)){
-			var oldUsername = userList[findUsernameCorrespondingToSocket(socket)].user;
+			var useIdx = findUsernameCorrespondingToSocket(socket);
+			if(useIdx === null)
+				throw "unable to edit user, no user found to match socket";
+			var oldUsername = userList[useIdx].user;
 			changeUsername(socket, newUsername);
 			socket.emit('editAllow');
 			socket.broadcast.emit('editUser', {oldUsername : oldUsername, newUsername: newUsername});
@@ -63,8 +44,9 @@ exports.init = function (socket) {
 	});
 
   	socket.on('chatMessage', function (data) {
-    	console.log('Received post: ' + JSON.stringify(data));
-	    messageList.push(new ChatMessage(data.from, data.message));
+    	console.log('Received chat message: ' + JSON.stringify(data));
+    	chatMessageList.addMessage(data.from, data.message);
 	    socket.broadcast.emit('chatMessage', data);
   	});
+
 };

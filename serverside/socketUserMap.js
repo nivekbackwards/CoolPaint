@@ -1,10 +1,5 @@
 module.exports = SocketUserMapping;
 
-var SocketUser = function(socket, user){
-	this.socket = socket;
-	this.user = user;
-};
-
 var SocketUserMapping = function(){
 	var socketUserMap = [];
 }
@@ -31,6 +26,10 @@ SocketUserMapping.prototype.removeUser = function(socket){
 	return username;
 };
 
+SocketUserMapping.prototype.addUser = function(username, socket){
+	this.socketUserMap.push(new SocketUser(socket, user));
+};
+
 SocketUserMapping.prototype.changeUsername = function(socket, newUsername){
 	var userIndex = this.findUsernameCorrespondingToSocket(socket);
 	if(userIndex === null){
@@ -54,6 +53,12 @@ SocketUserMapping.prototype.goodName = function(username){
 	if(this.usernameInUse(username))	// if another client is using this username...
 		return false;						// it is not allowed
 	return true;
+
+
+var SocketUser = function(socket, user){
+	this.socket = socket;
+	this.user = user;
+};
 
 /*
 	if($.inArray(data.username, userList)) 	

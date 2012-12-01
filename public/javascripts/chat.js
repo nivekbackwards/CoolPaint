@@ -1,5 +1,7 @@
 define(['jquery', 'socketIO'], function($, io){
   
+  var myName = "testUser1";
+
   // Important Objects:
   function publisher() {
     var subscribers = {};
@@ -120,16 +122,16 @@ define(['jquery', 'socketIO'], function($, io){
     // our callback when it is ready to do so:
     obj.post.subscribe('submit', function () {
       // Grab the textarea's text and send to server:
-      var message = obj.text.getText();
-      socket.emit('post', { post : message });
+      var messageContent = obj.text.getText();
+      socket.emit('chatMessage', { message : messageContent, from: myName });
       // Clear the text box and add the message locally:
       obj.text.clearText();
-      obj.list.addMessage(message);
+      obj.list.addMessage(messageContent);
     });
 
     // Handle incoming post messages from the server:
-    socket.on('post', function (data) {
-      obj.list.addMessage(data.post);
+    socket.on('chatMessage', function (data) {
+      obj.list.addMessage(data.message);
     });
     
     return obj;

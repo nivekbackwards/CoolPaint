@@ -1,6 +1,6 @@
 define(['jquery', 'fabric'], function($, fabric){
     $(function () {
-			console.log("hello world");
+			console.log("hello from coolapint.js ready handler");
 		});
 		
 		function pad(str, length) {

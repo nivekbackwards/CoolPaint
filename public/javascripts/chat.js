@@ -141,17 +141,17 @@ define(['jquery', 'socketIO'], function($, io){
   var Chat = {};
 
   $(function () {
-    console.log('hello from chat app ready handler');
+    console.log('hello from chat.js ready handler');
     // Connect with WebSockets:
     var socket = io.connect();
     // Instantiate a new chat application:
     Chat.app = chatApp(socket);
   });
 
-
   var testObj = {
     test:"hello from chat module!"
   };
+
 
 
   return testObj;

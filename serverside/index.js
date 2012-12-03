@@ -4,7 +4,6 @@ TODO:
 	remove throw statements
 */
 
-
 var SocketUserMapClass 	= require('./socketUserMap');
 var socketUserMapping 	= new SocketUserMapClass();
 
@@ -14,6 +13,8 @@ var chatMessageList		= new MessageListClass();
 //currently not in use
 var WhiteboardObjectsClass 	= require('./whiteboardObjects');
 var whiteboardState 		= new whiteboardObjects;
+
+var idCounter = 0;
 
 // Server-side support for chat app:
 exports.init = function (socket) {
@@ -25,7 +26,7 @@ exports.init = function (socket) {
 			socketUserMapping.addUser(socket, username);				// add username to list
 			socket.emit('loginAlow');									// allow client to login
 			socket.emit('messages', {messageList: messageList});		// send client list of chat messages
-			//TODO														// send client current state of whiteboard								
+			socket.emit('whiteboardState', {whiteboardObjects: whiteboardState};
 		}
 		else{														// otherwise
 			socket.emit('loginReject');									// reject the login
@@ -61,5 +62,23 @@ exports.init = function (socket) {
     	chatMessageList.addMessage(data.from, data.message);
 	    socket.broadcast.emit('chatMessage', data);
   	});
+
+  	socket.on('newObject', function(data){
+  		socket.emit('newObjectID', {id: idCounter});
+  		socket.broadcast.emit('newObject', {object: data.object, id: idCounter});
+  		whiteboardState.idCounter = data.object;  	
+  		idCounter++;
+  	});
+
+  	socket.on('objectEdit', function(data){
+  		var id = data.id;
+  		var attrName = data.attrName;
+  		var attrValue = data.attrValue;
+
+		socket.broadcast.emit('objectEdit', {id: id, attrName: attrName, attrValue: attrValue});
+
+  		var object = whiteboardState.id;
+  		object.attrName = attrValue;
+  	}
 
 };

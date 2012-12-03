@@ -33,7 +33,7 @@ exports.init = function (socket) {
 	});
 
 	socket.on('disconnect', function(){
-		var disconnectedUser = socketUserMapping.removeUsernameCorrespondingToSocket(socket);
+		var disconnectedUser = socketUserMapping.removeUser(socket);
 		if(disconnectedUser === null)
 			console.log('disconnect error....');
 		socket.broadcast.emit('userLeft', {username : disconnectedUser});

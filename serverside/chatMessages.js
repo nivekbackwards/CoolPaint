@@ -1,6 +1,6 @@
 module.exports = MessageList;
 
-var MessageList = function(){
+function MessageList(){
 	this.messageList = [];
 };
 

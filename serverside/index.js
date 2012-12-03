@@ -12,7 +12,7 @@ var chatMessageList		= new MessageListClass();
 
 //currently not in use
 var WhiteboardObjectsClass 	= require('./whiteboardObjects');
-var whiteboardState 		= new whiteboardObjects;
+var whiteboardState 		= new WhiteboardObjectsClass;
 
 var idCounter = 0;
 
@@ -26,7 +26,7 @@ exports.init = function (socket) {
 			socketUserMapping.addUser(socket, username);				// add username to list
 			socket.emit('loginAlow');									// allow client to login
 			socket.emit('messages', {messageList: messageList});		// send client list of chat messages
-			socket.emit('whiteboardState', {whiteboardObjects: whiteboardState};
+			socket.emit('whiteboardState', {whiteboardObjects: whiteboardState});
 		}
 		else{														// otherwise
 			socket.emit('loginReject');									// reject the login
@@ -79,6 +79,6 @@ exports.init = function (socket) {
 
   		var object = whiteboardState.id;
   		object.attrName = attrValue;
-  	}
+  	});
 
 };

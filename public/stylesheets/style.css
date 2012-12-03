@@ -13,6 +13,18 @@ img {
 	padding: 5px;
 }
 
+.center{
+  margin-left: auto ;
+  margin-right: auto ;
+}
+
+#view-login{
+/*visibility:hidden;*/
+}
+#view-canvas{
+	visibility:hidden;
+}
+
 #message-list {
   border: 1px dashed black;
   padding: 5px;
@@ -88,4 +100,18 @@ img {
 	position: absolute;
 	left: -20px;
 	top: -30px;
+}
+
+#loginLogo {
+	position:relative;
+	right:-350px;
+}
+
+#loginButton {
+	position: relative;
+}
+
+#nameBox {
+	position: relative;
+	width: 200px;
 }

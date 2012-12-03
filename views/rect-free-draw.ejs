@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+	<head>
+		<title>CoolPaint</title>
+		<script src="http://fabricjs.com/js/master.js"></script>
+    	<script src="http://fabricjs.com/lib/fabric.js"></script>
+    	<!--<script src="../public/javascripts/coolpaint.js"></script>-->
+    </head>
+    <body>
+    <div id="controls">
+    	<button id="drawing-mode">Drawing Mode</button>
+    	<button id="clear-canvas">Clear Canvas</button>
+    	<button id="rect">Add Rectangle</button>
+    	<button id="circle">Add Circle</button>
+    	<button id="triangle">Add Triangle</button>
+    	<button id="text">Add Text</button>
+    </div>
+    <canvas id="my-canvas" width="800" height="600"></canvas>
+    
+    <script>
+    
+    		var canvas = new fabric.Canvas('my-canvas');
+canvas.observe('mouse:down', function(e) { mousedown(e); });
+canvas.observe('mouse:move', function(e) { mousemove(e); });
+canvas.observe('mouse:up', function(e) { mouseup(e); });
+
+var started = false;
+var x = 0;
+var y = 0;
+
+/* Mousedown */
+function mousedown(e) {
+    started = true;
+    x = e.e.x;
+    y = e.e.y;
+    console.log("new rectangle: (" + x + ", " + y + ")");
+    var square = new fabric.Rect({ 
+        width: 0, 
+        height: 0, 
+        left: x, 
+        top: y, 
+        fill: '#000'
+    });
+
+    canvas.add(square); 
+    canvas.renderAll();
+    canvas.setActiveObject(square); 
+
+}
+
+
+/* Mousemove */
+function mousemove(e) {
+    if(!started) {
+        return false;
+    }
+	
+	console.log("mouse x: " + e.e.x + ", y: " + e.e.y + ", rect x: " + x + ", y: " + y);
+	var left = Math.min(x, e.e.x);
+	var top = Math.min(y, e.e.y);
+	var right = Math.max(x, e.e.x);
+	var bot = Math.max(y, e.e.y);
+	var w = right - left;
+	var h = bot - top;
+	var centerX = left + w/2;
+	var centerY = top + h/2;
+	//console.log("w: " + w + ", h: " + h + ", x: " + x + ", y: " + y);
+
+    if (!w || !h) {
+        return false;
+        console.log("false");
+    }
+
+    var square = canvas.getActiveObject(); 
+	
+    square.set('left',centerX).set('top', centerY).set('width', w).set('height', h);
+
+    canvas.renderAll(); 
+}
+
+/* Mouseup */
+function mouseup(e) {
+    if(started) {
+        started = false;
+    }
+
+    var square = canvas.getActiveObject();
+
+    canvas.add(square); 
+    canvas.renderAll();
+ } 
+    </script>
+    </body>
+</html>

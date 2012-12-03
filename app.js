@@ -32,7 +32,7 @@ var server = http.createServer(app);
 
 // WebSockets/Socket.IO
 var io      = require('socket.io', {'log level': 0}).listen(server);
-var chatApp = require('./chat');
+var chatApp = require('./serverside');
 
 io.sockets.on('connection', function (socket) {
   chatApp.init(socket);

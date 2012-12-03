@@ -6,36 +6,25 @@ require(
   // modules names that are more sensible:
   { paths: { jquery: 'require_jquery',
              underscore: 'require_underscore',
-             backbone: 'backbone-min',
-             socketIO: 'require_socketIO'
-             // We can also define sub-directories to hold
-             // javascript for particular libraries:
-             //lib: '/javascripts/lib'
+             //backbone: 'backbone-min',
+             socketIO: 'require_socketIO',
+             fabric: 'require_fabric'
            },
-    // The shim map allows you to load in an external library
-    // that is not a require.js module and requires dependencies
-    // on other libraries:
-    shim: { 'backbone': {
-              deps: ['underscore', 'jquery'],
-              exports: 'Backbone' 
-            }
-          }
     
   },
   
   // We then include the libraries we want to load for
   // our main application:
-  ['jquery', 'underscore', 'chat', 'socketIO'], 
+  ['jquery', 'underscore', 'chat', 'socketIO', 'coolpaint', 'fabric'], 
   
   // Now we have the main application entry point:
-  function ($, _, chatApp, io) {
-    console.log('does this do anything...?');
+  function ($, _, chatApp, io, coolPaintApp, fabric) {
+    console.log("hello from main function");
 
-    // Simple module:
-    //console.log('Loaded module1    : ' + JSON.stringify(m1));  
-   
     // Using jQuery:
     console.log('Loaded jQuery     : ' + $('h1').text() + '!');
+
+    console.log('Loaded fabric ?');//    : ' + JSON.stringify(fabric));
    
     // Using Underscore:
     console.log('Loaded underscore:');
@@ -44,16 +33,7 @@ require(
       });
 
     console.log('returned object from ChatApp ... ' + chatApp.test);
-    
-    /*
-    // Module with dependencies:
-    console.log('Loaded module2    : ');
-    var title = new m2.Title();
-    console.log('Title: ' + title.el.text());
 
-    // Module in subdirectory:
-    var o = new libm.obj('h1');
-    console.log('libm module: ' + o.display()); 
-    */
+    console.log('returned object from CoolPaintApp ...' + coolPaintApp.test);
   }
 );

@@ -1,8 +1,9 @@
 module.exports = SocketUserMapping;
 
-var SocketUserMapping = function(){
+function SocketUserMapping(){
 	var socketUserMap = [];
-}
+};
+
 
 // returns index in user list
 SocketUserMapping.prototype.findUsernameCorrespondingToSocket = function(socket){

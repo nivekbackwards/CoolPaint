@@ -1,7 +1,7 @@
 module.exports = WhiteboardState;
 
-var WhiteboardState = function(){
-	this.whiteboardObjects = [];
+function WhiteboardState(){
+	this.whiteboardObjects = [];	
 };
 
 WhiteboardState.prototype.addObject = function(newObject){

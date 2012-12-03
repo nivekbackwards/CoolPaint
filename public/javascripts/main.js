@@ -7,32 +7,24 @@ require(
   { paths: { jquery: 'require_jquery',
              underscore: 'require_underscore',
              //backbone: 'backbone-min',
-             socketIO: 'require_socketIO'
+             socketIO: 'require_socketIO',
+             fabric: 'require_fabric'
            },
-
-    // The shim map allows you to load in an external library
-    // that is not a require.js module and requires dependencies
-    // on other libraries:
-    /*
-    shim: { 'backbone': {
-              deps: ['underscore', 'jquery'],
-              exports: 'Backbone' 
-            }
-          }
-          */
     
   },
   
   // We then include the libraries we want to load for
   // our main application:
-  ['jquery', 'underscore', 'chat', 'socketIO'], 
+  ['jquery', 'underscore', 'chat', 'socketIO', 'coolpaint', 'fabric'], 
   
   // Now we have the main application entry point:
-  function ($, _, chatApp, io) {
+  function ($, _, chatApp, io, coolPaintApp, fabric) {
     console.log("hello from main function");
 
     // Using jQuery:
     console.log('Loaded jQuery     : ' + $('h1').text() + '!');
+
+    console.log('Loaded fabric ?');//    : ' + JSON.stringify(fabric));
    
     // Using Underscore:
     console.log('Loaded underscore:');
@@ -41,5 +33,7 @@ require(
       });
 
     console.log('returned object from ChatApp ... ' + chatApp.test);
+
+    console.log('returned object from CoolPaintApp ...' + coolPaintApp.test);
   }
 );

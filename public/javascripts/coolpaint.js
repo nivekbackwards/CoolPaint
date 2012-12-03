@@ -1,6 +1,7 @@
-		$(function () {
+define(['jquery', 'fabric'], function($, fabric){
+    $(function () {
 			console.log("hello world");
-		};
+		});
 		
 		function pad(str, length) {
 			while (str.length < length) {
@@ -45,13 +46,13 @@
         	}
         };
         
-        var mode = selectMode;
+        //var mode = selectMode;
 		
 		var addRectEl = document.getElementById('rect');
 		
 		
 		addRectEl.onclick = function() {
-			mode = rectMode;
+			//mode = rectMode;
 			canvas.add(new fabric.Rect({
           		left: getRandomInt(50, 550),
       			top: getRandomInt(50, 350),
@@ -106,3 +107,11 @@
     	canvas.add(textSample);
     	updateComplexity();
    	 	};
+
+      var testObj = {
+        test:"hello from coolpaint module!"
+      };
+
+      return testObj;
+
+});

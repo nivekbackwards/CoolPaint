@@ -1,7 +1,6 @@
 /*
 TODO:
 	test the code
-	remove throw statements
 */
 
 var SocketUserMapClass 	= require('./socketUserMap');
@@ -34,21 +33,20 @@ exports.init = function (socket) {
 	});
 
 	socket.on('disconnect', function(){
-		var disconnectedUser = removeUsernameCorrespondingToSocket(socket);
+		var disconnectedUser = socketUserMapping.removeUsernameCorrespondingToSocket(socket);
 		if(disconnectedUser === null)
-			throw "disconnect failure, no user found to match socket";
+			console.log('disconnect error....');
 		socket.broadcast.emit('userLeft', {username : disconnectedUser});
 	});
 
 	socket.on('editUser', function(data){
 		var newUsername = data.newUsername;
 		console.log('user wants to change name to [' + newUsername + ']');
-		if(goodName(newUsername)){
-			var useIdx = findUsernameCorrespondingToSocket(socket);
-			if(useIdx === null)
-				throw "unable to edit user, no user found to match socket";
-			var oldUsername = userList[useIdx].user;
-			changeUsername(socket, newUsername);
+		if(socketUserMapping.goodName(newUsername)){
+			var oldUsername = socketUserMapping.findUsernameCorrespondingToSocket(socket);
+			if(oldUsername === null)
+				console.log("unable to edit user, no user found to match socket");
+			socketUserMappingchangeUsername(socket, newUsername);
 			socket.emit('editAllow');
 			socket.broadcast.emit('editUser', {oldUsername : oldUsername, newUsername: newUsername});
 		}

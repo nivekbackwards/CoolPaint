@@ -1,7 +1,7 @@
 module.exports = SocketUserMapping;
 
 function SocketUserMapping(){
-	var socketUserMap = [];
+	this.socketUserMap = [];
 };
 
 

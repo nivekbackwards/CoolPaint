@@ -5,7 +5,7 @@ exports.index = function(req, res){
 */
 
 exports.index = function(req, res){
-	res.render('paint', {title : 'le paint'});
+	res.render('index.ejs');
 };
 
 // I don't think this works...

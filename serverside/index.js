@@ -23,8 +23,8 @@ exports.init = function (socket) {
 		var username = data.username;
 		if(socketUserMapping.goodName(username)){					// if this username is valid
 			socketUserMapping.addUser(socket, username);				// add username to list
-			socket.emit('loginAlow');									// allow client to login
-			socket.emit('messages', {messageList: messageList});		// send client list of chat messages
+			socket.emit('loginAllow');									// allow client to login
+			socket.emit('messages', {messageList: chatMessageList.messageList});		// send client list of chat messages
 			socket.emit('whiteboardState', {whiteboardObjects: whiteboardState});
 		}
 		else{														// otherwise

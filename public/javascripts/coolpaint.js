@@ -1,7 +1,34 @@
-define(['jquery', 'fabric'], function($, fabric){
+define(['jquery', 'fabric', 'socketIO'], function($, fabric, io){
     $(function () {
-			console.log("hello from coolapint.js ready handler");
+      $('#view-login').show();
+      $('#view-canvas').hide();
+
+      console.log("hello from coolapint.js ready handler");
+      console.log('initializing connection on client');
+      var socket = io.connect();
+      Chat.app = chatApp(socket);
 		});
+
+    //idk why we need this
+    var Chat = {};
+
+    function chatApp(socket) {
+      $('#loginButton').bind('click', function(){
+        var username = $('#nameBox').val();
+        console.log('user attempts to login with [' + username + '], sending message to server');
+        socket.emit('loginAttempt', {username: username});
+      });
+
+      socket.on('loginAllow', function(){
+        console.log('login successful!');
+        $('#view-login').hide();
+        $('#view-canvas').show();
+      });
+
+      socket.on('loginReject', function(){
+        console.log('username rejected');
+      });
+    };
 		
 		function pad(str, length) {
 			while (str.length < length) {

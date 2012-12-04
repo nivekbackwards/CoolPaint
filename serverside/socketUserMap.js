@@ -28,7 +28,7 @@ SocketUserMapping.prototype.removeUser = function(socket){
 };
 
 SocketUserMapping.prototype.addUser = function(username, socket){
-	this.socketUserMap.push(new SocketUser(socket, user));
+	this.socketUserMap.push(new SocketUser(socket, username));
 };
 
 SocketUserMapping.prototype.changeUsername = function(socket, newUsername){
@@ -50,10 +50,31 @@ SocketUserMapping.prototype.usernameInUse = function(username){
 	return false;
 };
 
+var acceptableName = /^[A-Za-z_][A-Za-z_0-9]*$/;
 SocketUserMapping.prototype.goodName = function(username){
-	if(this.usernameInUse(username))	// if another client is using this username...
+	console.log('checking if [' + username + '] is valid');
+
+	if(username == undefined){
+		console.log('BAD name -- usernamename undefined');
+		return false;
+	}
+
+	if(this.usernameInUse(username)){	// if another client is using this username...
+		console.log('BAD name -- username in use');
 		return false;						// it is not allowed
-	return true;
+	}
+
+	if(acceptableName.test(username)){
+		console.log('GOOD name :)');
+		return true;
+	}
+	else{
+		console.log('BAD name -- invalid characters');
+		return false;
+	}
+};
+
+
 
 
 var SocketUser = function(socket, user){
@@ -66,4 +87,3 @@ var SocketUser = function(socket, user){
 		return false;								
 	return true;
 	*/
-};

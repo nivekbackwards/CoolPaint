@@ -6,11 +6,9 @@ require(
   // modules names that are more sensible:
   { paths: { jquery: 'require_jquery',
              underscore: 'require_underscore',
-             //backbone: 'backbone-min',
              socketIO: 'require_socketIO',
              fabric: 'require_fabric'
            },
-    
   },
   
   // We then include the libraries we want to load for
@@ -32,8 +30,8 @@ require(
         console.log(num);
       });
 
-    console.log('returned object from ChatApp ... ' + chatApp.test);
+    //console.log('returned object from ChatApp ... ' + chatApp.test);
 
-    console.log('returned object from CoolPaintApp ...' + coolPaintApp.test);
+    //console.log('returned object from CoolPaintApp ...' + coolPaintApp.test);
   }
 );

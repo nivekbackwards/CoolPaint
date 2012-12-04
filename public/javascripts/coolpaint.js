@@ -3,17 +3,20 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, io){
       console.log("hello from coolapint.js ready handler");
       console.log('initializing connection on client');
       var socket = io.connect();
-      Chat.app = chatApp(socket);
+      chatApp(socket);
 		});
-
-    //idk why we need this
-    var Chat = {};
 
     function chatApp(socket) {
       $('#loginButton').bind('click', function(){
         var username = $('#nameBox').val();
         console.log('user attempts to login with [' + username + '], sending message to server');
         socket.emit('loginAttempt', {username: username});
+      });
+
+      $('#nameBox').keyup(function(event){
+        if(event.keyCode == 13){
+          $('#loginButton').click();
+        }
       });
 
       socket.on('loginAllow', function(){
@@ -121,10 +124,12 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, io){
     	updateComplexity();
    	 	};
 
+/*
       var testObj = {
         test:"hello from coolpaint module!"
       };
 
       return testObj;
+      */
 
 });

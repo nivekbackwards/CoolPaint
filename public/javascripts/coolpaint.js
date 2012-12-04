@@ -1,8 +1,5 @@
 define(['jquery', 'fabric', 'socketIO'], function($, fabric, io){
     $(function () {
-      $('#view-login').show();
-      $('#view-canvas').hide();
-
       console.log("hello from coolapint.js ready handler");
       console.log('initializing connection on client');
       var socket = io.connect();
@@ -21,8 +18,8 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, io){
 
       socket.on('loginAllow', function(){
         console.log('login successful!');
-        $('#view-login').hide();
-        $('#view-canvas').show();
+        $('#view-login').css('visibility', 'hidden');
+        $('#view-canvas').css('visibility', 'visible');
       });
 
       socket.on('loginReject', function(){

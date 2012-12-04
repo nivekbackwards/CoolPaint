@@ -19,7 +19,8 @@ img {
 }
 
 #view-login{
-/*visibility:hidden;*/
+	position:absolute;
+	top: 0px;
 }
 #view-canvas{
 	visibility:hidden;

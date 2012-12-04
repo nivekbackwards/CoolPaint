@@ -52,21 +52,10 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, io){
     	
     	var canvas = new fabric.Canvas('my-canvas');
     	
-    	var drawingModeEl = document.getElementById('drawing-mode');
-    	
-		drawingModeEl.onclick = function() {
+    	$('#drawing-mode').bind('click', function() {
+    		console.log('dat draw mode click');
     		canvas.isDrawingMode = !canvas.isDrawingMode;
-    		if (canvas.isDrawingMode) {
-      			drawingModeEl.innerHTML = 'Exit drawing mode';
-      			drawingModeEl.className = 'is-drawing';
-      			drawingOptionsEl.style.display = '';
-    		}
-    		else {
-      			drawingModeEl.innerHTML = 'Enter drawing mode';
-      			drawingModeEl.className = '';
-      			drawingOptionsEl.style.display = 'none';
-    		}
-  		};
+  		});
   		
   		var clearCanvasEl = document.getElementById('clear-canvas');
   		

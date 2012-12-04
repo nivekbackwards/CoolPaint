@@ -13,6 +13,12 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, io){
         socket.emit('loginAttempt', {username: username});
       });
 
+      $('#nameBox').keyup(function(event){
+        if(event.keyCode == 13){
+          $('#loginButton').click();
+        }
+      });
+
       socket.on('loginAllow', function(){
         console.log('login successful!');
         $('#view-login').css('visibility', 'hidden');

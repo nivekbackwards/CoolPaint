@@ -18,12 +18,15 @@ img {
   margin-right: auto ;
 }
 
+/*
 #view-login{
 /*visibility:hidden;*/
 }
+/*
 #view-canvas{
 	visibility:hidden;
 }
+*/
 
 #message-list {
   border: 1px dashed black;

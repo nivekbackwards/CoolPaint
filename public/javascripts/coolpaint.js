@@ -4,19 +4,22 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, io){
       console.log('initializing connection on client');
       var socket = io.connect();
       chatApp(socket);
+      bindNonNetworkFunctionality();
 		});
+
+    function bindNonNetworkFunctionality(){
+      $('#nameBox').keyup(function(event){
+        if(event.keyCode == 13){
+          $('#loginButton').click();
+        }
+      });
+    };
 
     function chatApp(socket) {
       $('#loginButton').bind('click', function(){
         var username = $('#nameBox').val();
         console.log('user attempts to login with [' + username + '], sending message to server');
         socket.emit('loginAttempt', {username: username});
-      });
-
-      $('#nameBox').keyup(function(event){
-        if(event.keyCode == 13){
-          $('#loginButton').click();
-        }
       });
 
       socket.on('loginAllow', function(){

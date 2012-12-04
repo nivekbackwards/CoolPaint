@@ -4,6 +4,7 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, io){
       console.log('initializing connection on client');
       var socket = io.connect();
       chatApp(socket);
+
       bindNonNetworkFunctionality();
 		});
 
@@ -13,6 +14,8 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, io){
           $('#loginButton').click();
         }
       });
+
+      
     };
 
     function chatApp(socket) {
@@ -26,6 +29,12 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, io){
         console.log('login successful!');
         $('#view-login').css('visibility', 'hidden');
         $('#view-canvas').css('visibility', 'visible');
+        
+        var canvas = new fabric.Canvas('my-canvas');
+        $('#drawing-mode').bind('click', function() {
+    		console.log('dat draw mode click');
+    		canvas.isDrawingMode = !canvas.isDrawingMode;
+  	  	});
       });
 
       socket.on('loginReject', function(){
@@ -50,12 +59,10 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, io){
 		
 	  var getRandomInt = fabric.util.getRandomInt;
     	
-    	var canvas = new fabric.Canvas('my-canvas');
+
     	
-    	$('#drawing-mode').bind('click', function() {
-    		console.log('dat draw mode click');
-    		canvas.isDrawingMode = !canvas.isDrawingMode;
-  		});
+    	
+
   		
   		var clearCanvasEl = document.getElementById('clear-canvas');
   		

@@ -3,11 +3,8 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, io){
       console.log("hello from coolapint.js ready handler");
       console.log('initializing connection on client');
       var socket = io.connect();
-      Chat.app = chatApp(socket);
+      chatApp(socket);
 		});
-
-    //idk why we need this
-    var Chat = {};
 
     function chatApp(socket) {
       $('#loginButton').bind('click', function(){
@@ -132,10 +129,12 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, io){
     	updateComplexity();
    	 	};
 
+/*
       var testObj = {
         test:"hello from coolpaint module!"
       };
 
       return testObj;
+      */
 
 });

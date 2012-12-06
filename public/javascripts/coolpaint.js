@@ -1,4 +1,7 @@
 define(['jquery', 'fabric', 'socketIO'], function($, fabric, io){
+    var myName = null;
+
+
     $(function () {
       console.log("hello from coolapint.js ready handler");
       console.log('initializing connection on client');
@@ -10,13 +13,21 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, io){
 
     function bindNonNetworkFunctionality(){
       $('#nameBox').keyup(function(event){
-        if(event.keyCode == 13){
+        if(event.keyCode == 13){    // press Enter
           $('#loginButton').click();
         }
       });
 
       
     };
+
+    function displayChatMessage(from, theMessage){
+      var messageObject = $('<li>');
+      messageObject.text(from + ': ' + theMessage);
+      //$('#message-list').prepend(messageObject);
+      $('#message-list').append(messageObject);
+    }
+
 
     function chatApp(socket) {
       $('#loginButton').bind('click', function(){
@@ -25,17 +36,41 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, io){
         socket.emit('loginAttempt', {username: username});
       });
 
-      socket.on('loginAllow', function(){
+      $('#drawing-mode').bind('click', function() {
+        console.log('dat draw mode click');
+        canvas.isDrawingMode = !canvas.isDrawingMode;
+        });
+
+      $('#chat-text-area').keyup(function(event){
+          if(event.keyCode == 13){   // press Enter
+            var theMessage = $('#chat-text-area').val();
+            displayChatMessage('Me', theMessage);
+            $('#chat-text-area').val('');
+            socket.emit('chatMessage', {from: myName, message: theMessage});
+            console.log('sending message [' + theMessage + ']');
+          }
+      });
+
+      socket.on('loginAllow', function(data){
         console.log('login successful!');
         $('#view-login').css('visibility', 'hidden');
         $('#view-canvas').css('visibility', 'visible');
         
         var canvas = new fabric.Canvas('my-canvas');
+        myName = data.yourName;
+
         $('#drawing-mode').bind('click', function() {
-    		console.log('dat draw mode click');
-    		canvas.isDrawingMode = !canvas.isDrawingMode;
-  	  	});
+        console.log('dat draw mode click');
+        canvas.isDrawingMode = !canvas.isDrawingMode;
+        });
       });
+
+
+      socket.on('chatMessage', function(data){
+        console.log('received message ' + JSON.stringify(data));
+        displayChatMessage(data.from, data.message);
+      });
+
 
       socket.on('loginReject', function(){
         console.log('username rejected');

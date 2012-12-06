@@ -13,7 +13,7 @@ require(
   
   // We then include the libraries we want to load for
   // our main application:
-  ['jquery', 'underscore', 'chat', 'socketIO', 'coolpaint', 'fabric'], 
+  ['jquery', 'underscore', 'socketIO', 'coolpaint', 'fabric'], 
   
   // Now we have the main application entry point:
   function ($, _, chatApp, io, coolPaintApp, fabric) {

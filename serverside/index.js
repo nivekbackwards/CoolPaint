@@ -23,7 +23,7 @@ exports.init = function (socket) {
 		var username = data.username;
 		if(socketUserMapping.goodName(username)){					// if this username is valid
 			socketUserMapping.addUser(socket, username);				// add username to list
-			socket.emit('loginAllow');									// allow client to login
+			socket.emit('loginAllow', {yourName: username});									// allow client to login
 			socket.emit('messages', {messageList: chatMessageList.messageList});		// send client list of chat messages
 			socket.emit('whiteboardState', {whiteboardObjects: whiteboardState});
 		}
@@ -33,6 +33,7 @@ exports.init = function (socket) {
 	});
 
 	socket.on('disconnect', function(){
+		console.log('a user has disconnected');
 		var disconnectedUser = socketUserMapping.removeUser(socket);
 		if(disconnectedUser === null)
 			console.log('disconnect error....');

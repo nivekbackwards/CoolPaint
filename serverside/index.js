@@ -58,7 +58,7 @@ exports.init = function (socket) {
 
   	socket.on('chatMessage', function (data) {
     	console.log('Received chat message: ' + JSON.stringify(data));
-    	chatMessageList.addMessage(data.from, data.message);
+    	chatMessageList.addMessage(data.from, data.message, data.time);
 	    socket.broadcast.emit('chatMessage', data);
   	});
 

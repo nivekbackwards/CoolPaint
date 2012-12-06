@@ -21,10 +21,16 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, io){
       
     };
 
-    function displayChatMessage(from, theMessage){
+    function displayChatMessage(from, theMessage, time){
+      var numHours;
+      var numMinutes;
+      console.log('type of our time [' + typeof(time) + ']');
+      if(time){
+        numHours = time.getHours();
+        numMinutes = time.getMinutes();
+      }
       var messageObject = $('<li>');
-      messageObject.text(from + ': ' + theMessage);
-      //$('#message-list').prepend(messageObject);
+      messageObject.text('[' + numHours + ':' + numMinutes + '] ' + from + ': ' + theMessage);
       $('#message-list').append(messageObject);
     }
 
@@ -44,10 +50,10 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, io){
       $('#chat-text-area').keyup(function(event){
           if(event.keyCode == 13){   // press Enter
             var theMessage = $('#chat-text-area').val();
-            displayChatMessage('Me', theMessage);
+            var messageTime = new Date();
+            displayChatMessage('Me', theMessage, messageTime);
             $('#chat-text-area').val('');
-            socket.emit('chatMessage', {from: myName, message: theMessage});
-            console.log('sending message [' + theMessage + ']');
+            socket.emit('chatMessage', {from: myName, message: theMessage, time:messageTime});
           }
       });
 
@@ -65,12 +71,17 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, io){
         });
       });
 
-
       socket.on('chatMessage', function(data){
         console.log('received message ' + JSON.stringify(data));
-        displayChatMessage(data.from, data.message);
+        displayChatMessage(data.from, data.message, new Date());
       });
 
+      socket.on('messages', function(data){
+        var messages = data.messageList;
+        console.log('received lots of messages ' + JSON.stringify(messages));
+        for(var i=0; i<messages.length; i++)
+          displayChatMessage(messages[i].from, messages[i].message, new Date());
+      })
 
       socket.on('loginReject', function(){
         console.log('username rejected');

@@ -13,16 +13,13 @@ MessageList.prototype.getMessageList = function(){
 	return this.messageList;
 };
 
-
-
-
 function ChatMessage(from, message){
 	this.from = from;
 	this.message = message;
-	this.time = Date.now();
+	this.time = new Date();
 };
 
 ChatMessage.prototype.toString = function(){
-	return "" + this.time + " " + this.from + "  :  " + message;
+	return "[" + this.time.getHours() + ":" + this.time.getMinutes() + "] " + this.from + "  :  " + this.message;
 };
 

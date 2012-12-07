@@ -59,9 +59,9 @@ SocketUserMapping.prototype.goodName = function(username){
 		return false;
 	}
 
-	if(this.usernameInUse(username)){	// if another client is using this username...
+	if(this.usernameInUse(username)){
 		console.log('BAD name -- username in use');
-		return false;						// it is not allowed
+		return false;
 	}
 
 	if(acceptableName.test(username)){
@@ -73,8 +73,6 @@ SocketUserMapping.prototype.goodName = function(username){
 		return false;
 	}
 };
-
-
 
 
 var SocketUser = function(socket, user){

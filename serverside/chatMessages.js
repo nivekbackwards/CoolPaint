@@ -5,7 +5,6 @@ function MessageList(){
 };
 
 MessageList.prototype.addMessage = function(from, message){
-	console.log('adding message [' + message + '] to messageList');
 	this.messageList.push(new ChatMessage(from, message));
 };
 

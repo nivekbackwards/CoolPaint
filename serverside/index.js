@@ -9,7 +9,6 @@ var whiteboardState 		= new WhiteboardObjectsClass;
 
 var idCounter = 0;
 
-// Server-side support for chat app:
 exports.init = function (socket) {
 
 	socket.on('loginAttempt', function(data){
@@ -58,20 +57,25 @@ exports.init = function (socket) {
 
   	socket.on('newObject', function(data){
   		socket.emit('newObjectID', {id: idCounter});
-  		socket.broadcast.emit('newObject', {object: data.object, id: idCounter});
-  		whiteboardState.idCounter = data.object;  	
+  		data.object.id = idCounter;
+  		socket.broadcast.emit('newObject', {object: data.object});
+  		whiteboardState.addObject(data.object);
   		idCounter++;
   	});
 
-  	socket.on('objectEdit', function(data){
+  	socket.on('editObject', function(data){
   		var id = data.id;
   		var attrName = data.attrName;
   		var attrValue = data.attrValue;
 
-		socket.broadcast.emit('objectEdit', {id: id, attrName: attrName, attrValue: attrValue});
+  		whiteboardState.editObject(id, attrName, attrValue);
+		socket.broadcast.emit('editObject', {id: id, attrName: attrName, attrValue: attrValue});	  		
+  	});
 
-  		var object = whiteboardState.id;
-  		object.attrName = attrValue;
+  	socket.on('removeObject', function(data){
+  		var id = data.id;
+  		whiteboardState.removeObject(id);
+  		socket.broadcast.emit('removeObject', {id: id});
   	});
 
 };

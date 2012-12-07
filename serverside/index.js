@@ -1,15 +1,9 @@
-/*
-TODO:
-	test the code
-*/
-
 var SocketUserMapClass 	= require('./socketUserMap');
 var socketUserMapping 	= new SocketUserMapClass();
 
 var MessageListClass 	= require('./chatMessages');
 var chatMessageList		= new MessageListClass();
 
-//currently not in use
 var WhiteboardObjectsClass 	= require('./whiteboardObjects');
 var whiteboardState 		= new WhiteboardObjectsClass;
 
@@ -21,14 +15,14 @@ exports.init = function (socket) {
 	socket.on('loginAttempt', function(data){
 		console.log('user attempting to connect ' + JSON.stringify(data));
 		var username = data.username;
-		if(socketUserMapping.goodName(username)){					// if this username is valid
-			socketUserMapping.addUser(socket, username);				// add username to list
-			socket.emit('loginAllow', {yourName: username});									// allow client to login
+		if(socketUserMapping.goodName(username)){									// if this username is valid
+			socketUserMapping.addUser(socket, username);								// add username to list
+			socket.emit('loginAllow', {yourName: username});							// allow client to login
 			socket.emit('messages', {messageList: chatMessageList.messageList});		// send client list of chat messages
-			socket.emit('whiteboardState', {whiteboardObjects: whiteboardState});
+			socket.emit('whiteboardState', {whiteboardObjects: whiteboardState});		// send client current state of whiteboard
 		}
-		else{														// otherwise
-			socket.emit('loginReject');									// reject the login
+		else{																		// otherwise
+			socket.emit('loginReject');													// reject the login
 		}	
 	});
 

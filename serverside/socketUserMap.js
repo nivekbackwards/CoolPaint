@@ -81,9 +81,3 @@ var SocketUser = function(socket, user){
 	this.socket = socket;
 	this.user = user;
 };
-
-/*
-	if($.inArray(data.username, userList)) 	
-		return false;								
-	return true;
-	*/

@@ -1,47 +1,40 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-	<link rel='stylesheet' href='/stylesheets/style.css' />
-	<script data-main="javascripts/main.js" 
-            src="javascripts/rawLibraries/require.js">
-    </script>
-</head>
+	<head>
+		<link rel='stylesheet' href='/stylesheets/style.css' />
+		<script data-main="javascripts/main.js" 
+	            src="javascripts/rawLibraries/require.js">
+	    </script>
+	</head>
 
-<body>
-<!-- 	<h1>CoolPaint chat, bitches</h1>
-	<div id="chat-app">
-		<textarea id="chat-text-area" rows="5" cols="50"></textarea>
-		<br>
-		<input id="chat-post-button" type="submit" value="Post">
-		<ul id="message-list"></div> -->
-	<div id="view-login">
-		<img src="/images/Coolpaint.png" id="loginLogo">
-		<input id="nameBox" type="box" value="Username" onclick = "this.value = '';">
-		<input id="loginButton" type="submit" value="Login">
-	</div>
-	<div id="view-canvas">
-		<img src="/images/Coolpaint.png" id="coolpaintLogo">		
-		<div id="corner"></div>
-		<div id="title"></div>
-		<div id="left side">
-			<div id="chatWindow">
-				<div>
-					<ul id="message-list">
+	<body>
+		<div id="view-login">
+			<img src="/images/Coolpaint.png" id="loginLogo">
+			<input id="nameBox" type="box" value="Username" onclick = "this.value = '';">
+			<input id="loginButton" type="submit" value="Login">
+		</div>
+		<div id="view-canvas">
+			<img src="/images/Coolpaint.png" id="coolpaintLogo">		
+			<div id="corner"></div>
+			<div id="title"></div>
+			<div id="left side">
+				<div id="chatWindow">
+					<div>
+						<ul id="message-list">
+					</div>
+					<input type="text" id="chat-text-area">
 				</div>
-				<input type="text" id="chat-text-area">
+				<div id="buttonHolder">
+					<img src="/images/pencil.png" id="drawing-mode">
+					<img src="/images/text.png" id="textButton">
+					<img src="/images/shapes.png" id="shapesButton">
+				</div>
 			</div>
-			<div id="buttonHolder">
-				<img src="/images/pencil.png" id="drawing-mode">
-				<img src="/images/text.png" id="textButton">
-				<img src="/images/shapes.png" id="shapesButton">
+			<div id="canvas">
+			<canvas id="my-canvas" width="986" height="586"></canvas>
 			</div>
 		</div>
-		<div id="canvas">
-		<canvas id="my-canvas" width="986" height="586"></canvas>
-		</div>
-	</div>
-
-</body>
+	</body>
 
 </html>

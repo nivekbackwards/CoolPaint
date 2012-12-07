@@ -1,11 +1,9 @@
-define(['jquery', 'fabric', 'socketIO'], function($, fabric, io){
+define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
     var myName = null;
-
 
     $(function () {
       console.log("hello from coolapint.js ready handler");
       console.log('initializing connection on client');
-      var socket = io.connect();
       chatApp(socket);
 
       bindNonNetworkFunctionality();
@@ -16,15 +14,16 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, io){
         if(event.keyCode == 13){    // press Enter
           $('#loginButton').click();
         }
-      });
-
-      
+      });      
     };
 
     function displayChatMessage(from, theMessage, time){
+      console.log('length of chat message [' + theMessage.length + ']');
+      console.log('width of chat window   [' + $('#message-list').width() + ']');
+
+
       var numHours;
       var numMinutes;
-      console.log('type of our time [' + typeof(time) + ']');
       if(time){
         numHours = time.getHours();
         numMinutes = time.getMinutes();

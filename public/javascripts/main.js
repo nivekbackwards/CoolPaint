@@ -18,20 +18,6 @@ require(
   // Now we have the main application entry point:
   function ($, _, chatApp, io, coolPaintApp, fabric) {
     console.log("hello from main function");
-
-    // Using jQuery:
-    console.log('Loaded jQuery     : ' + $('h1').text() + '!');
-
-    console.log('Loaded fabric ?');//    : ' + JSON.stringify(fabric));
-   
-    // Using Underscore:
-    console.log('Loaded underscore:');
-    _.each([1, 2, 3], function (num) {
-        console.log(num);
-      });
-
-    //console.log('returned object from ChatApp ... ' + chatApp.test);
-
-    //console.log('returned object from CoolPaintApp ...' + coolPaintApp.test);
   }
+  
 );

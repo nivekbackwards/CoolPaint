@@ -17,11 +17,16 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
       });      
     };
 
+    $.fn.textWidth = function(){
+      var html_org = $(this).html();
+      var html_calc = '<span>' + html_org + '</span>';
+      $(this).html(html_calc);
+      var width = $(this).find('span:first').width();
+      $(this).html(html_org);
+      return width;
+    };
+
     function displayChatMessage(from, theMessage, time){
-      console.log('length of chat message [' + theMessage.length + ']');
-      console.log('width of chat window   [' + $('#message-list').width() + ']');
-
-
       var numHours;
       var numMinutes;
       if(time){
@@ -30,9 +35,27 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
       }
       var messageObject = $('<li>');
       messageObject.text('[' + numHours + ':' + numMinutes + '] ' + from + ': ' + theMessage);
+
+      messageObject.css('visibility', 'hidden');
       $('#message-list').append(messageObject);
+      makeElementMultiline(messageObject);
     }
 
+    function makeElementMultiline(element){
+      element.text(addNewlines(element.text()));
+      element.css('visibility', 'visible');
+    }
+
+    function addNewlines(str){
+      var result = '';
+      while (str.length > 0){
+        result += str.substring(0, 50) + '\n';
+        str = str.substring(50);
+      }
+      return result;
+    }
+
+    
 
     function chatApp(socket) {
       $('#loginButton').bind('click', function(){

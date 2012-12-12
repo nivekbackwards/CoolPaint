@@ -40,6 +40,25 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
       $('#pencilButton').bind('click', function() {
         console.log('dat draw mode click');
         canvas.isDrawingMode = !canvas.isDrawingMode;
+        if (!canvas.isDrawingMode) {
+        	var lastObj = canvas.getObjects()[canvas.getObjects().length - 1];
+        	console.log(lastObj);
+        	var serializedObj = JSON.stringify(lastObj)
+        	
+        	//to communicate with the server
+        	socket.emit('newObject', {data: serializedObj});
+        	console.log("emit: " + serializedObj);
+        	
+        	lastObj.remove();
+        	canvas.loadFromJSON(serializedObj);
+        	canvas.renderAll();
+        }
+        
+        
+        
+        
+        
+        
       });
 
       $('#chat-text-area').keyup(function(event){
@@ -111,6 +130,7 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
       }
       return result;
     }
+    
 
     
 

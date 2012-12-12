@@ -57,7 +57,7 @@ exports.init = function (socket) {
 
   	socket.on('newObject', function(data){
   		socket.emit('newObjectID', {id: idCounter});
-  		data.data.id = idCounter;
+  		data.object.id = idCounter;
   		socket.broadcast.emit('newObject', {object: data.object});
   		whiteboardState.addObject(data.object);
   		idCounter++;

@@ -2,6 +2,13 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
     var myName = null;
     var canvas;
 
+    var pencilButton;
+    var handButton;
+    var textButton;
+    var shapesButton;
+    var selected = null;
+    var chatTextArea;
+
     $.fn.textWidth = function(){
       var html_org = $(this).html();
       var html_calc = '<span>' + html_org + '</span>';
@@ -35,14 +42,103 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
     };
 
     function bindDrawThings(){
-    canvas = new fabric.Canvas('my-canvas');
+      pencilButton  = $("#pencilButton");
+      chatTextArea  = $('#chat-text-area');
+      handButton    = $('#handButton');
+      textButton    = $('#textButton');
+      shapesButton  = $('#shapesButton');
+      canvas = new fabric.Canvas('my-canvas');
 
-      $('#pencilButton').bind('click', function() {
-        console.log('dat draw mode click');
+      pencilButton.bind('click', function() {
         canvas.isDrawingMode = !canvas.isDrawingMode;
+        if(selected !== null && selected !== pencilButton)
+          selected.toggleOff();
+        pencilButton.toggleOn();
       });
 
-      $('#chat-text-area').keyup(function(event){
+      pencilButton.toggleOn = function(){
+        var downPic = '/images/pencilDown.png';
+        if(pencilButton !== selected){
+          selected = pencilButton;
+          pencilButton.attr('src', downPic);
+        }
+      };
+
+      pencilButton.toggleOff = function(){
+        var upPic = '/images/pencilUp.png';
+        pencilButton.attr('src', upPic);
+      };
+
+              
+      handButton.bind('click', function(){
+        console.log("clicking the hand doesn't do anything!!!");
+        // actually do something with this handbutton click
+        if(selected !== null && selected !== handButton)
+          selected.toggleOff();
+        handButton.toggleOn();
+      });
+
+      handButton.toggleOn = function(){
+        var downPic = '/images/handDown.png';
+        if(handButton !== selected){
+          selected = handButton;
+          handButton.attr('src', downPic);
+        }
+      };
+
+      handButton.toggleOff = function(){
+        var upPic = '/images/handUp.png';
+        handButton.attr('src', upPic);
+      };
+
+
+      shapesButton.bind('click', function(){
+          console.log("clicking shapes doesn't do anything!!!");
+          // actually do something with this shapes click
+          if(selected !== null && selected !== shapesButton)
+          selected.toggleOff();
+        shapesButton.toggleOn();
+      });
+
+      shapesButton.toggleOn = function(){
+        var downPic = '/images/shapesDown.png';
+        if(shapesButton !== selected){
+          selected = shapesButton;
+          shapesButton.attr('src', downPic);
+        }
+      };
+
+      shapesButton.toggleOff = function(){
+        var upPic = '/images/shapesUp.png';
+        shapesButton.attr('src', upPic);
+      };
+
+
+      textButton.bind('click', function(){
+        // actually do something when text is clicked
+        if(selected !== null && selected !== textButton)
+          selected.toggleOff();
+        textButton.toggleOn();
+      });
+
+      textButton.toggleOn = function(){
+        var downPic = '/images/textDown.png';
+        if(textButton !== selected){
+          selected = textButton;
+          textButton.attr('src', downPic);
+        }
+      };
+
+      textButton.toggleOff = function(){
+        var upPic = '/images/textUp.png';
+        textButton.attr('src', upPic);
+      }
+
+
+
+
+
+      chatTextArea.keyup(function(event){
           if(event.keyCode == 13){   // press Enter
             var theMessage = $('#chat-text-area').val();
             var messageTime = new Date();
@@ -81,6 +177,20 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
         console.log('username rejected');
       });
     };
+
+
+/*
+    function togglePencilPicture(){
+      /*
+      var pencilPicture = pencilButton.attr('src');
+      var upPic = '/images/pencilUp.png';
+      var downPic = '/images/pencilDown.png';
+      if(pencilPicture === upPic)
+        pencilButton.attr('src', downPic);
+      else
+        pencilButton.attr('src', upPic);
+      */
+    //}
 
 
     function displayChatMessage(from, theMessage, time){

@@ -7,10 +7,12 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
     var textButton;
     var shapesButton;
     var widthButton;
+    var shapeSelectorButton;
     var selected = null;
     var chatTextArea;
 
     var lineWidthPictures = [];
+    var shapePictures = [];
 
     $.fn.textWidth = function(){
       var html_org = $(this).html();
@@ -38,6 +40,10 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
       lineWidthPictures.push('/images/width3.png');
       lineWidthPictures.push('/images/width4.png');
 
+      shapePictures.push('images/ovalUp.png');
+      shapePictures.push('images/squareUp.png');
+      shapePictures.push('images/triangleUp.png');
+      shapePictures.push('images/lineUp.png');
     };
 
     function bindLoginThings(){
@@ -61,6 +67,7 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
       textButton    = $('#textButton');
       shapesButton  = $('#shapesButton');
       widthButton   = $('#widthButton');
+      shapeSelectorButton  = $('#shapeSelectorButton');
       canvas = new fabric.Canvas('my-canvas');
 
 
@@ -178,9 +185,22 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
       });
 
       widthButton.cycle = function(){
-        console.log('le cycle');
         currWidthImageIdx = (currWidthImageIdx + 1) % lineWidthPictures.length;
         widthButton.attr('src', lineWidthPictures[currWidthImageIdx]);
+      };
+
+
+/*                     SHAPE SELECTOR BUTTON                     */      
+      var currShapeIdx = 0;
+      shapeSelectorButton.bind('click', function(){
+        // actually do something when shape selector is clicked!
+        console.log("changing shapes doesn't actually do anything!!!");
+        shapeSelectorButton.cycle();
+      });
+
+      shapeSelectorButton.cycle = function(){
+        currShapeIdx = (currShapeIdx + 1) % shapePictures.length;
+        shapeSelectorButton.attr('src', shapePictures[currShapeIdx]);
       };
 
       chatTextArea.keyup(function(event){
@@ -192,6 +212,9 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
             socket.emit('chatMessage', {from: myName, message: theMessage, time:messageTime});
           }
       });
+
+
+
 
     };
 

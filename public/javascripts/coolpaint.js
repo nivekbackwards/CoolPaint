@@ -1,22 +1,6 @@
 define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
     var myName = null;
 
-    $(function () {
-      console.log("hello from coolapint.js ready handler");
-      console.log('initializing connection on client');
-      chatApp(socket);
-
-      bindNonNetworkFunctionality();
-		});
-
-    function bindNonNetworkFunctionality(){
-      $('#nameBox').keyup(function(event){
-        if(event.keyCode == 13){    // press Enter
-          $('#loginButton').click();
-        }
-      });      
-    };
-
     $.fn.textWidth = function(){
       var html_org = $(this).html();
       var html_calc = '<span>' + html_org + '</span>';
@@ -25,6 +9,77 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
       $(this).html(html_org);
       return width;
     };
+
+    $(function () {
+      console.log("hello from coolapint.js ready handler");
+      console.log('initializing connection on client');
+      //chatApp(socket);
+
+      bindThings();
+      socketThings();
+		});
+
+    function bindThings(){
+      $('#nameBox').keyup(function(event){
+        if(event.keyCode == 13){    // press Enter
+          $('#loginButton').click();
+        }
+      });      
+
+      $('#loginButton').bind('click', function(){
+        var username = $('#nameBox').val();
+        console.log('user attempts to login with [' + username + '], sending message to server');
+        socket.emit('loginAttempt', {username: username});
+      });
+
+      $('#drawing-mode').bind('click', function() {
+        console.log('dat draw mode click');
+        canvas.isDrawingMode = !canvas.isDrawingMode;
+        });
+
+      $('#chat-text-area').keyup(function(event){
+          if(event.keyCode == 13){   // press Enter
+            var theMessage = $('#chat-text-area').val();
+            var messageTime = new Date();
+            displayChatMessage('Me', theMessage, messageTime);
+            $('#chat-text-area').val('');
+            socket.emit('chatMessage', {from: myName, message: theMessage, time:messageTime});
+          }
+      });
+    };
+
+    function socketThings() {
+      socket.on('loginAllow', function(data){
+        console.log('login successful!');
+        $('#view-login').css('visibility', 'hidden');
+        $('#view-canvas').css('visibility', 'visible');
+        
+        var canvas = new fabric.Canvas('my-canvas');
+        myName = data.yourName;
+
+        $('#drawing-mode').bind('click', function() {
+        console.log('dat draw mode click');
+        canvas.isDrawingMode = !canvas.isDrawingMode;
+        });
+      });
+
+      socket.on('chatMessage', function(data){
+        console.log('received message ' + JSON.stringify(data));
+        displayChatMessage(data.from, data.message, new Date());
+      });
+
+      socket.on('messages', function(data){
+        var messages = data.messageList;
+        console.log('received lots of messages ' + JSON.stringify(messages));
+        for(var i=0; i<messages.length; i++)
+          displayChatMessage(messages[i].from, messages[i].message, new Date());
+      })
+
+      socket.on('loginReject', function(){
+        console.log('username rejected');
+      });
+    };
+
 
     function displayChatMessage(from, theMessage, time){
       var numHours;
@@ -57,58 +112,7 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
 
     
 
-    function chatApp(socket) {
-      $('#loginButton').bind('click', function(){
-        var username = $('#nameBox').val();
-        console.log('user attempts to login with [' + username + '], sending message to server');
-        socket.emit('loginAttempt', {username: username});
-      });
-
-      $('#drawing-mode').bind('click', function() {
-        console.log('dat draw mode click');
-        canvas.isDrawingMode = !canvas.isDrawingMode;
-        });
-
-      $('#chat-text-area').keyup(function(event){
-          if(event.keyCode == 13){   // press Enter
-            var theMessage = $('#chat-text-area').val();
-            var messageTime = new Date();
-            displayChatMessage('Me', theMessage, messageTime);
-            $('#chat-text-area').val('');
-            socket.emit('chatMessage', {from: myName, message: theMessage, time:messageTime});
-          }
-      });
-
-      socket.on('loginAllow', function(data){
-        console.log('login successful!');
-        $('#view-login').css('visibility', 'hidden');
-        $('#view-canvas').css('visibility', 'visible');
-        
-        var canvas = new fabric.Canvas('my-canvas');
-        myName = data.yourName;
-
-        $('#drawing-mode').bind('click', function() {
-        console.log('dat draw mode click');
-        canvas.isDrawingMode = !canvas.isDrawingMode;
-        });
-      });
-
-      socket.on('chatMessage', function(data){
-        console.log('received message ' + JSON.stringify(data));
-        displayChatMessage(data.from, data.message, new Date());
-      });
-
-      socket.on('messages', function(data){
-        var messages = data.messageList;
-        console.log('received lots of messages ' + JSON.stringify(messages));
-        for(var i=0; i<messages.length; i++)
-          displayChatMessage(messages[i].from, messages[i].message, new Date());
-      })
-
-      socket.on('loginReject', function(){
-        console.log('username rejected');
-      });
-    };
+    
 		
 		function pad(str, length) {
 			while (str.length < length) {

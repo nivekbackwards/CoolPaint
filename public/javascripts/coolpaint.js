@@ -23,6 +23,8 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
       console.log('initializing connection on client');
       //chatApp(socket);
 
+      $(this).scrollTop(0);
+
       bindLoginThings();
       socketThings();
 		});

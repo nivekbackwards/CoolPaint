@@ -6,7 +6,7 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
     var handButton;
     var textButton;
     var shapesButton;
-    var lineWidthButton;
+    var widthButton;
     var selected = null;
     var chatTextArea;
 
@@ -60,6 +60,7 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
       handButton    = $('#handButton');
       textButton    = $('#textButton');
       shapesButton  = $('#shapesButton');
+      widthButton   = $('#widthButton');
       canvas = new fabric.Canvas('my-canvas');
 
 
@@ -148,6 +149,7 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
 /*                     TEXT BUTTON                     */
       textButton.bind('click', function(){
         // actually do something when text is clicked
+        console.log("clicking text doesn't do anything!");
         if(selected !== null && selected !== textButton)
           selected.toggleOff();
         textButton.toggleOn();
@@ -167,10 +169,19 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
       }
 
 
+/*                     WIDTH BUTTON                     */      
+      var currWidthImageIdx = 1;
+      widthButton.bind('click', function(){
+        // actually do something when width button is clicked
+        console.log("clicking width doesn't do anything");
+        widthButton.cycle();
+      });
 
-
-
-
+      widthButton.cycle = function(){
+        console.log('le cycle');
+        currWidthImageIdx = (currWidthImageIdx + 1) % lineWidthPictures.length;
+        widthButton.attr('src', lineWidthPictures[currWidthImageIdx]);
+      };
 
       chatTextArea.keyup(function(event){
           if(event.keyCode == 13){   // press Enter

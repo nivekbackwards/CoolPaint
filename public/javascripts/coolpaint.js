@@ -16,11 +16,11 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
       console.log('initializing connection on client');
       //chatApp(socket);
 
-      bindThings();
+      bindLoginThings();
       socketThings();
 		});
 
-    function bindThings(){
+    function bindLoginThings(){
       $('#nameBox').keyup(function(event){
         if(event.keyCode == 13){    // press Enter
           $('#loginButton').click();
@@ -32,11 +32,15 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
         console.log('user attempts to login with [' + username + '], sending message to server');
         socket.emit('loginAttempt', {username: username});
       });
+    };
 
-      $('#drawing-mode').bind('click', function() {
+    function bindDrawThings(){
+    canvas = new fabric.Canvas('my-canvas');
+
+      $('#pencilButton').bind('click', function() {
         console.log('dat draw mode click');
         canvas.isDrawingMode = !canvas.isDrawingMode;
-        });
+      });
 
       $('#chat-text-area').keyup(function(event){
           if(event.keyCode == 13){   // press Enter
@@ -47,6 +51,7 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
             socket.emit('chatMessage', {from: myName, message: theMessage, time:messageTime});
           }
       });
+
     };
 
     function socketThings() {
@@ -55,13 +60,9 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
         $('#view-login').css('visibility', 'hidden');
         $('#view-canvas').css('visibility', 'visible');
         
-        canvas = new fabric.Canvas('my-canvas');
-        myName = data.yourName;
+        bindDrawThings();
 
-        $('#drawing-mode').bind('click', function() {
-        console.log('dat draw mode click');
-        canvas.isDrawingMode = !canvas.isDrawingMode;
-        });
+        myName = data.yourName; 
       });
 
       socket.on('chatMessage', function(data){

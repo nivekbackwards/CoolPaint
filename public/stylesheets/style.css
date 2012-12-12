@@ -98,6 +98,7 @@ img {
 #buttonHolder {
 	position: relative;
 	top: 570px;
+	left: -40px;
 }
 
 #coolpaintLogo {

@@ -57,7 +57,7 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
         	var serializedObj = JSON.stringify(lastObj)
         	
         	//to communicate with the server
-        	socket.emit('newObject', {data: serializedObj});
+        	socket.emit('newObject', {object: serializedObj});
         	console.log("emit: " + serializedObj);
         	
         	lastObj.remove();

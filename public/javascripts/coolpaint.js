@@ -24,7 +24,8 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
     $(function () {
       console.log("hello from coolapint.js ready handler");
       console.log('initializing connection on client');
-      //chatApp(socket);
+
+      $(this).scrollTop(0);
 
       loadImages();
       bindLoginThings();

@@ -6,8 +6,11 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
     var handButton;
     var textButton;
     var shapesButton;
+    var lineWidthButton;
     var selected = null;
     var chatTextArea;
+
+    var lineWidthPictures = [];
 
     $.fn.textWidth = function(){
       var html_org = $(this).html();
@@ -23,9 +26,18 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
       console.log('initializing connection on client');
       //chatApp(socket);
 
+      loadImages();
       bindLoginThings();
       socketThings();
 		});
+
+    function loadImages(){
+      lineWidthPictures.push('/images/width1.png');
+      lineWidthPictures.push('/images/width2.png');
+      lineWidthPictures.push('/images/width3.png');
+      lineWidthPictures.push('/images/width4.png');
+
+    };
 
     function bindLoginThings(){
       $('#nameBox').keyup(function(event){
@@ -49,6 +61,8 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
       shapesButton  = $('#shapesButton');
       canvas = new fabric.Canvas('my-canvas');
 
+
+/*                     PENCIL BUTTON                     */
       pencilButton.bind('click', function() {
         canvas.isDrawingMode = !canvas.isDrawingMode;
         if (!canvas.isDrawingMode) {
@@ -64,12 +78,7 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
         	canvas.loadFromJSON('{"objects":[' + serializedObj + ']}');
         	canvas.renderAll();
         }
-        
-        
-        
-        
-        
-        
+
         if(selected !== null && selected !== pencilButton)
           selected.toggleOff();
         pencilButton.toggleOn();
@@ -89,6 +98,7 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
       };
 
               
+/*                     HAND BUTTON                     */
       handButton.bind('click', function(){
         console.log("clicking the hand doesn't do anything!!!");
         // actually do something with this handbutton click
@@ -111,6 +121,7 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
       };
 
 
+/*                     SHAPES BUTTON                     */
       shapesButton.bind('click', function(){
           console.log("clicking shapes doesn't do anything!!!");
           // actually do something with this shapes click
@@ -133,6 +144,7 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
       };
 
 
+/*                     TEXT BUTTON                     */
       textButton.bind('click', function(){
         // actually do something when text is clicked
         if(selected !== null && selected !== textButton)
@@ -152,6 +164,8 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
         var upPic = '/images/textUp.png';
         textButton.attr('src', upPic);
       }
+
+
 
 
 

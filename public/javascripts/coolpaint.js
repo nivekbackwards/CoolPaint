@@ -50,7 +50,7 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
         	console.log("emit: " + serializedObj);
         	
         	lastObj.remove();
-        	canvas.loadFromJSON(serializedObj);
+        	canvas.loadFromJSON('{"objects":[' + serializedObj + ']}');
         	canvas.renderAll();
         }
         

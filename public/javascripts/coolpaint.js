@@ -195,6 +195,10 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
       socket.on('loginReject', function(){
         console.log('username rejected');
       });
+
+      socket.on('newObject', function(data){
+        console.log('new object received! ' + JSON.stringify(data));
+      });
     };
 
 

@@ -1,5 +1,6 @@
 define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
     var myName = null;
+    var canvas;
 
     $.fn.textWidth = function(){
       var html_org = $(this).html();
@@ -54,7 +55,7 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
         $('#view-login').css('visibility', 'hidden');
         $('#view-canvas').css('visibility', 'visible');
         
-        var canvas = new fabric.Canvas('my-canvas');
+        canvas = new fabric.Canvas('my-canvas');
         myName = data.yourName;
 
         $('#drawing-mode').bind('click', function() {

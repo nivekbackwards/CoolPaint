@@ -253,6 +253,7 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
 
       socket.on('newObject', function(data){
         console.log('new object received! ' + JSON.stringify(data));
+        addFromJSON(data.object);
       });
     };
 

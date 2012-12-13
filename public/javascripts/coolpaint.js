@@ -6,8 +6,13 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
     var handButton;
     var textButton;
     var shapesButton;
+    var widthButton;
+    var shapeSelectorButton;
     var selected = null;
     var chatTextArea;
+
+    var lineWidthPictures = [];
+    var shapePictures = [];
 
     $.fn.textWidth = function(){
       var html_org = $(this).html();
@@ -21,11 +26,25 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
     $(function () {
       console.log("hello from coolapint.js ready handler");
       console.log('initializing connection on client');
-      //chatApp(socket);
 
+      $(this).scrollTop(0);
+
+      loadImages();
       bindLoginThings();
       socketThings();
 		});
+
+    function loadImages(){
+      lineWidthPictures.push('/images/width1.png');
+      lineWidthPictures.push('/images/width2.png');
+      lineWidthPictures.push('/images/width3.png');
+      lineWidthPictures.push('/images/width4.png');
+
+      shapePictures.push('images/ovalUp.png');
+      shapePictures.push('images/squareUp.png');
+      shapePictures.push('images/triangleUp.png');
+      shapePictures.push('images/lineUp.png');
+    };
 
     function bindLoginThings(){
       $('#nameBox').keyup(function(event){
@@ -47,8 +66,12 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
       handButton    = $('#handButton');
       textButton    = $('#textButton');
       shapesButton  = $('#shapesButton');
+      widthButton   = $('#widthButton');
+      shapeSelectorButton  = $('#shapeSelectorButton');
       canvas = new fabric.Canvas('my-canvas');
 
+
+/*                     PENCIL BUTTON                     */
       pencilButton.bind('click', function() {
         canvas.isDrawingMode = !canvas.isDrawingMode;
         if (!canvas.isDrawingMode) {
@@ -70,12 +93,7 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
         	addFromJSON(serializedObj);
         	canvas.renderAll();
         }
-        
-        
-        
-        
-        
-        
+
         if(selected !== null && selected !== pencilButton)
           selected.toggleOff();
         pencilButton.toggleOn();
@@ -95,6 +113,7 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
       };
 
               
+/*                     HAND BUTTON                     */
       handButton.bind('click', function(){
         console.log("clicking the hand doesn't do anything!!!");
         // actually do something with this handbutton click
@@ -117,6 +136,7 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
       };
 
 
+/*                     SHAPES BUTTON                     */
       shapesButton.bind('click', function(){
           console.log("clicking shapes doesn't do anything!!!");
           // actually do something with this shapes click
@@ -139,8 +159,10 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
       };
 
 
+/*                     TEXT BUTTON                     */
       textButton.bind('click', function(){
         // actually do something when text is clicked
+        console.log("clicking text doesn't do anything!");
         if(selected !== null && selected !== textButton)
           selected.toggleOff();
         textButton.toggleOn();
@@ -160,8 +182,32 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
       }
 
 
+/*                     WIDTH BUTTON                     */      
+      var currWidthImageIdx = 1;
+      widthButton.bind('click', function(){
+        // actually do something when width button is clicked
+        console.log("clicking width doesn't do anything");
+        widthButton.cycle();
+      });
+
+      widthButton.cycle = function(){
+        currWidthImageIdx = (currWidthImageIdx + 1) % lineWidthPictures.length;
+        widthButton.attr('src', lineWidthPictures[currWidthImageIdx]);
+      };
 
 
+/*                     SHAPE SELECTOR BUTTON                     */      
+      var currShapeIdx = 0;
+      shapeSelectorButton.bind('click', function(){
+        // actually do something when shape selector is clicked!
+        console.log("changing shapes doesn't actually do anything!!!");
+        shapeSelectorButton.cycle();
+      });
+
+      shapeSelectorButton.cycle = function(){
+        currShapeIdx = (currShapeIdx + 1) % shapePictures.length;
+        shapeSelectorButton.attr('src', shapePictures[currShapeIdx]);
+      };
 
       chatTextArea.keyup(function(event){
           if(event.keyCode == 13){   // press Enter
@@ -172,6 +218,9 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
             socket.emit('chatMessage', {from: myName, message: theMessage, time:messageTime});
           }
       });
+
+
+
 
     };
 

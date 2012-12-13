@@ -59,10 +59,14 @@ exports.init = function (socket) {
   		console.log('received new object ' + JSON.stringify(data));
   		socket.emit('newObjectID', {id: idCounter});
   		var myObj = JSON.parse(data.object);
-  		myObj.id = idCounter;
-  		socket.broadcast.emit('newObject', {object: myObj});
-  		whiteboardState.addObject(data.object);
-  		idCounter++;
+  		if(myObj){
+  			myObj.id = idCounter;
+  			socket.broadcast.emit('newObject', {object: myObj});
+  			whiteboardState.addObject(data.object);
+  			idCounter++;
+  		}
+  		else
+  			console.log('for some reason this was called when no object was created');
   	});
 
   	socket.on('editObject', function(data){

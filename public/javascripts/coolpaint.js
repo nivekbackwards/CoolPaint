@@ -3,7 +3,10 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
     var myName = null;
     var canvas;
     var prevCanvasJSON;
+    var currCanvasJSON;
 
+    var rastaButton;
+    var clearCanvasButton;
     var pencilButton;
     var handButton;
     var textButton;
@@ -87,7 +90,11 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
       shapeSelectorButton  = $('#shapeSelectorButton');
       colorPicker = $('#colorPicker');
       canvas = new fabric.Canvas('my-canvas');
+      rastaButton = $('#rastaButton');
+      clearCanvasButton = $('#clearCanvasButton');
       prevCanvasJSON = JSON.stringify(canvas);
+      currCanvasJSON = JSON.stringify(canvas);
+
       mouseDownAttach();
       mouseUpAttach();
 
@@ -95,17 +102,17 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
 
 /*                     PENCIL BUTTON                     */
       pencilButton.bind('click', function() {
-        canvas.isDrawingMode = !canvas.isDrawingMode;
+        canvas.isDrawingMode = true;
 
         if(selected !== null && selected !== pencilButton)
           selected.toggleOff();
         pencilButton.toggleOn();
 
         //Clear the options menu, then move the pencil options up
-        $('#optionButtons img').appendTo($('#hiddenOptionButtons'));
-        $('#hiddenOptionButtons #colorPickerWrapper').appendTo($('#optionButtons'));
+        $('#optionButtons .option').appendTo($('#hiddenOptionButtons'));
+        
+        $('#hiddenOptionButtons #colorPicker').appendTo($('#optionButtons'));
         $('#hiddenOptionButtons #widthButton').appendTo($('#optionButtons'));
-
       });
 
       pencilButton.toggleOn = function(){
@@ -124,14 +131,15 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
               
 /*                     HAND BUTTON                     */
       handButton.bind('click', function(){
-        console.log("clicking the hand doesn't do anything!!!");
+        canvas.isDrawingMode = false;
+
         // actually do something with this handbutton click
         if(selected !== null && selected !== handButton)
           selected.toggleOff();
         handButton.toggleOn();
 
         //Clear the options menu, then move the hand options up
-        $('#optionButtons img').appendTo($('#hiddenOptionButtons'));
+        $('#optionButtons .option').appendTo($('#hiddenOptionButtons'));
         $('#hiddenOptionButtons #connectButton').appendTo($('#optionButtons'));
       });
 
@@ -158,7 +166,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
         shapesButton.toggleOn();
 
         //Clear the options menu, then move the shape options up
-        $('#optionButtons img').appendTo($('#hiddenOptionButtons'));
+        $('#optionButtons .option').appendTo($('#hiddenOptionButtons'));
         $('#hiddenOptionButtons #widthButton').appendTo($('#optionButtons'));
         $('#hiddenOptionButtons #shapeSelectorButton').appendTo($('#optionButtons'));
         $('#hiddenOptionButtons #shapeOuterColor').appendTo($('#optionButtons'));
@@ -188,7 +196,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
           selected.toggleOff();
         textButton.toggleOn();
 
-        $('#optionButtons img').appendTo($('#hiddenOptionButtons'));
+        $('#optionButtons .option').appendTo($('#hiddenOptionButtons'));
       });
 
       textButton.toggleOn = function(){
@@ -253,6 +261,22 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
           }
       });
 
+      rastaButton.click(function() {
+        var answer = confirm("Rasta-rize the image, mon?")
+        if (!answer || !fabric.Canvas.supports('toDataURL')) {
+          alert('This browser doesn\'t provide means to serialize canvas to an image');
+        }
+        else {
+          window.open(canvas.toDataURL('png'));
+        }
+      });
+
+      clearCanvasButton.click(function() {
+        var answer = confirm("Are you sure you want to clear the canvas?")
+        if (answer) {
+          canvas.clear();
+        }
+      });
 
 
 
@@ -266,7 +290,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
 /*						MOUSE UP							*/
     function mouseUpAttach() {
      	canvas.observe('mouse:up', function(e) {
-     		var currCanvasJSON = JSON.stringify(canvas);
+     		currCanvasJSON = JSON.stringify(canvas);
      		var diff = jsondiffpatch.diff(prevCanvasJSON, currCanvasJSON);
      		console.log('canvasDiff=' + JSON.stringify(diff));
      		socket.emit('canvasDiff', {diff: JSON.stringify(diff)});

@@ -130,3 +130,17 @@ img {
 #hiddenOptionButtons {
 	visibility: hidden;
 }
+
+#menuButtons {
+	position: absolute;
+top: -10px;
+left: 1196px;
+}
+
+.color {
+position: absolute;
+width: 73px;
+height: 71px;
+top: 5px;
+left: 92px;
+}

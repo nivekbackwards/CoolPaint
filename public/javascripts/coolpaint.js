@@ -3,6 +3,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
     var myName = null;
     var canvas;
     var prevCanvasJSON;
+    var currCanvasJSON;
 
     var pencilButton;
     var handButton;
@@ -88,6 +89,8 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
       colorPicker = $('#colorPicker');
       canvas = new fabric.Canvas('my-canvas');
       prevCanvasJSON = JSON.stringify(canvas);
+      currCanvasJSON = JSON.stringify(canvas);
+
       mouseDownAttach();
       mouseUpAttach();
 
@@ -266,7 +269,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
 /*						MOUSE UP							*/
     function mouseUpAttach() {
      	canvas.observe('mouse:up', function(e) {
-     		var currCanvasJSON = JSON.stringify(canvas);
+     		currCanvasJSON = JSON.stringify(canvas);
      		var diff = jsondiffpatch.diff(prevCanvasJSON, currCanvasJSON);
      		console.log('canvasDiff=' + JSON.stringify(diff));
      		socket.emit('canvasDiff', {diff: diff});

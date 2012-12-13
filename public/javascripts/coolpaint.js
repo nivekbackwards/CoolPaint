@@ -20,8 +20,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
     var lastObj;
     var lineWidth = 3;
     var color = 'FFFFFF'
-    var jsondiffpatch = require([jsondiffpatch]);
-    jsondiffpatch.config.diff_match_patch = require([diff_match_patch_uncompressed]);
+    //jsondiffpatch.config.diff_match_patch = require([diff_match_patch_uncompressed]);
 
     $.fn.textWidth = function(){
       var html_org = $(this).html();
@@ -49,7 +48,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
       console.log('we have diffpatch?');
       //console.log(jsondiffpatch);
       //console.log(JSON.stringify(jsondiffpatch));
-      console.log(jsondiffpatch.diff({hi:1}, {hi: 2}));
+      console.log(JSON.stringify(jsondiffpatch.diff({hi:1}, {hi: 2})));
       console.log('tada!');
       
 		});
@@ -90,6 +89,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
       shapeSelectorButton  = $('#shapeSelectorButton');
       colorPicker = $('#colorPicker');
       canvas = new fabric.Canvas('my-canvas');
+      prevCanvasJSON = JSON.stringify(canvas);
       mouseDownAttach();
       mouseUpAttach();
 

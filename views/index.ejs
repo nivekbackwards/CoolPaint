@@ -32,21 +32,23 @@
 					<img src="/images/shapesUp.png" id="shapesButton">
 				</div>
 			</div>
-			<div id="optionButtons">
+			<div id="optionButtons"></div>
+			<div id="menuButtons">
+				<img src="/images/rasta.png" id="textButton" onclick="alert('Rasta-rize the image, mon?')">
+				<img src="/images/clearCanvas.png" id="textButton">
 			</div>
 			<div id="canvas-container">
 			<canvas id="my-canvas" width="986" height="586"></canvas>
 			</div>
 			<div id = "hiddenOptionButtons">
-				<img src="/images/colorUp.png" id="colorButton">
-				<div id="colorPickerWrapper">
-					<input type="color" class="color" id="colorPicker">
-				</div>
-				<img src="/images/connectUp.png" id="connectButton">
-				<img src="/images/width2.png" id="widthButton">
-				<img src="/images/ovalUp.png" id="shapeSelectorButton">
-				<img src="/images/shapeEdgeUp.png" id="shapeOuterColor">
-				<img src="/images/shapeInnerUp.png" id="shapeInnerColor">
+				<!-- <div id="colorPickerWrapper" class="option"> -->
+					<input type="color" class="color option" id="colorPicker">
+				<!-- </div> -->
+				<img src="/images/connectUp.png" id="connectButton" class="option">
+				<img src="/images/width2.png" id="widthButton" class="option">
+				<img src="/images/ovalUp.png" id="shapeSelectorButton" class="option">
+				<img src="/images/shapeEdgeUp.png" id="shapeOuterColor" class="option">
+				<img src="/images/shapeInnerUp.png" id="shapeInnerColor" class="option">
 			</div>
 		</div>
 	</body>

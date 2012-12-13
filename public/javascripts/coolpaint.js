@@ -98,17 +98,17 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
 
 /*                     PENCIL BUTTON                     */
       pencilButton.bind('click', function() {
-        canvas.isDrawingMode = !canvas.isDrawingMode;
+        canvas.isDrawingMode = true;
 
         if(selected !== null && selected !== pencilButton)
           selected.toggleOff();
         pencilButton.toggleOn();
 
         //Clear the options menu, then move the pencil options up
-        $('#optionButtons img').appendTo($('#hiddenOptionButtons'));
-        $('#hiddenOptionButtons #colorPickerWrapper').appendTo($('#optionButtons'));
+        $('#optionButtons .option').appendTo($('#hiddenOptionButtons'));
+        
+        $('#hiddenOptionButtons #colorPicker').appendTo($('#optionButtons'));
         $('#hiddenOptionButtons #widthButton').appendTo($('#optionButtons'));
-
       });
 
       pencilButton.toggleOn = function(){
@@ -127,14 +127,15 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
               
 /*                     HAND BUTTON                     */
       handButton.bind('click', function(){
-        console.log("clicking the hand doesn't do anything!!!");
+        canvas.isDrawingMode = false;
+        
         // actually do something with this handbutton click
         if(selected !== null && selected !== handButton)
           selected.toggleOff();
         handButton.toggleOn();
 
         //Clear the options menu, then move the hand options up
-        $('#optionButtons img').appendTo($('#hiddenOptionButtons'));
+        $('#optionButtons .option').appendTo($('#hiddenOptionButtons'));
         $('#hiddenOptionButtons #connectButton').appendTo($('#optionButtons'));
       });
 
@@ -161,7 +162,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
         shapesButton.toggleOn();
 
         //Clear the options menu, then move the shape options up
-        $('#optionButtons img').appendTo($('#hiddenOptionButtons'));
+        $('#optionButtons .option').appendTo($('#hiddenOptionButtons'));
         $('#hiddenOptionButtons #widthButton').appendTo($('#optionButtons'));
         $('#hiddenOptionButtons #shapeSelectorButton').appendTo($('#optionButtons'));
         $('#hiddenOptionButtons #shapeOuterColor').appendTo($('#optionButtons'));
@@ -191,7 +192,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
           selected.toggleOff();
         textButton.toggleOn();
 
-        $('#optionButtons img').appendTo($('#hiddenOptionButtons'));
+        $('#optionButtons .option').appendTo($('#hiddenOptionButtons'));
       });
 
       textButton.toggleOn = function(){

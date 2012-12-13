@@ -45,9 +45,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
 
 
       console.log('we have diffpatch?');
-      //console.log(jsondiffpatch);
-      //console.log(JSON.stringify(jsondiffpatch));
-      console.log(jsondiffpatch.diff({hi:1}, {hi: 2}));
+      console.log(jsondiffpatch.diff({same:1, different: 2}, {same: 1, different: 3}));
       console.log('tada!');
       
 		});

@@ -8,13 +8,16 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
     var shapesButton;
     var widthButton;
     var shapeSelectorButton;
+    var colorPicker;
     var selected = null;
     var chatTextArea;
 
     var lineWidthPictures = [];
     var shapePictures = [];
     
-    var newObj;
+    var lastObj;
+    var lineWidth = 3;
+    var color = 'FFFFFF'
 
     $.fn.textWidth = function(){
       var html_org = $(this).html();
@@ -72,8 +75,10 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
       shapesButton  = $('#shapesButton');
       widthButton   = $('#widthButton');
       shapeSelectorButton  = $('#shapeSelectorButton');
+      colorPicker = $('#colorPicker');
       canvas = new fabric.Canvas('my-canvas');
-      mouseThings();
+      mouseDownAttach();
+      mouseUpAttach();
 
       jscolor.bind();
 
@@ -187,10 +192,19 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
         var upPic = '/images/textUp.png';
         textButton.attr('src', upPic);
       }
+      
+/*						COLOR PICKER					*/
+	  colorPicker.change(function() {
+	  	console.log('colorPicker change');
+	  	color = colorPicker.val();
+	  	canvas.freeDrawingColor = color;
+	  });
+		
 
 
 /*                     WIDTH BUTTON                     */      
       var currWidthImageIdx = 1;
+      canvas.freeDrawingLineWidth = lineWidth;
       widthButton.bind('click', function(){
         // actually do something when width button is clicked
         console.log("clicking width doesn't do anything");
@@ -200,6 +214,8 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
       widthButton.cycle = function(){
         currWidthImageIdx = (currWidthImageIdx + 1) % lineWidthPictures.length;
         widthButton.attr('src', lineWidthPictures[currWidthImageIdx]);
+        lineWidth = 2 * currWidthImageIdx + 1;
+        canvas.freeDrawingLineWidth = lineWidth;
       };
 
 
@@ -230,19 +246,24 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
 
 
     };
+
+/*						MOUSE DOWN							*/
+	function mouseDownAttach() {
+		canvas.observe('mouse:down', function(e) {		});
+	}
     
 /*						MOUSE UP							*/
-    function mouseThings() {
+    function mouseUpAttach() {
      	canvas.observe('mouse:up', function(e) {
-     		console.log("mouse:up observer");
+     		//console.log("mouse:up observer");
      		if (canvas.isDrawingMode) {
      			var lastObj = canvas.getObjects()[canvas.getObjects().length - 1];
-        		console.log(lastObj);
+        		//console.log(lastObj);
         		var serializedObj = JSON.stringify(lastObj)
         	
         		//to communicate with the server
         		socket.emit('newObject', {object: serializedObj});
-        		console.log("emit: " + serializedObj);
+        		//console.log("canvas: " + JSON.stringify(canvas));
         	
         		//lastObj.remove();
         		//canvas.loadFromJSON('{"objects":[' + serializedObj + ']}');
@@ -256,6 +277,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
         		var serializedObj = JSON.stringify(lastObj)
         		//to communicate with the server
         		socket.emit('newObject', {object: serializedObj});
+        		//console.log("canvas: " + JSON.stringify(canvas));
         	}
      	});
      };
@@ -295,6 +317,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
       
       socket.on('newObjectID', function(data) {
       	console.log("new objectID received=" + data.id);
+      	lastObj.id = data.id;
       });
     };
 

@@ -293,9 +293,9 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
      	canvas.observe('mouse:up', function(e) {
      		currCanvasJSON = JSON.stringify(canvas);
      		var diff = jsondiffpatch.diff(prevCanvasJSON, currCanvasJSON);
-     		console.log('canvasDiff=' + JSON.stringify(diff));
+     		console.log(diff);
 
-     		socket.emit('canvasDiff', {diff: JSON.stringify(diff)});
+     		socket.emit('canvasDiff', {diff: diff});
      		prevCanvasJSON = currCanvasJSON;
      	});
      };

@@ -5,6 +5,8 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
     var prevCanvasJSON;
     var currCanvasJSON;
 
+    var rastaButton;
+    var clearCanvasButton;
     var pencilButton;
     var handButton;
     var textButton;
@@ -88,6 +90,8 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
       shapeSelectorButton  = $('#shapeSelectorButton');
       colorPicker = $('#colorPicker');
       canvas = new fabric.Canvas('my-canvas');
+      rastaButton = $('#rastaButton');
+      clearCanvasButton = $('#clearCanvasButton');
       prevCanvasJSON = JSON.stringify(canvas);
       currCanvasJSON = JSON.stringify(canvas);
 
@@ -128,7 +132,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
 /*                     HAND BUTTON                     */
       handButton.bind('click', function(){
         canvas.isDrawingMode = false;
-        
+
         // actually do something with this handbutton click
         if(selected !== null && selected !== handButton)
           selected.toggleOff();
@@ -257,6 +261,22 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
           }
       });
 
+      rastaButton.click(function() {
+        var answer = confirm("Rasta-rize the image, mon?")
+        if (!answer || !fabric.Canvas.supports('toDataURL')) {
+          alert('This browser doesn\'t provide means to serialize canvas to an image');
+        }
+        else {
+          window.open(canvas.toDataURL('png'));
+        }
+      });
+
+      clearCanvasButton.click(function() {
+        var answer = confirm("Are you sure you want to clear the canvas?")
+        if (answer) {
+          canvas.clear();
+        }
+      });
 
 
 

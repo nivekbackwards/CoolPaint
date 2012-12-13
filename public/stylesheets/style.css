@@ -126,3 +126,7 @@ img {
 	left: 580px;
 	top: -10px;
 }
+
+#hiddenOptionButtons {
+	visibility: hidden;
+}

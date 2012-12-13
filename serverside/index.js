@@ -56,16 +56,8 @@ exports.init = function (socket) {
 	    socket.broadcast.emit('chatMessage', data);
   	});
 
-/*
-		socket.emit('canvasDiff', {diff: })
-
-		socket.on('canvasDiff', function(data){
-			data.diff
-		})
-  	*/
-
   	socket.on('canvasDiff', function(data){
-  		socket.emit('canvasDiff', {diff: data.diff});
+  		socket.broadcast.emit('canvasDiff', {diff: data.diff});
   		whiteboardState.makeChange(data.diff);
   	});
 

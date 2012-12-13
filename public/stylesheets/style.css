@@ -120,3 +120,13 @@ img {
 	position: relative;
 	width: 200px;
 }
+
+#optionButtons {
+	position: absolute;
+	left: 580px;
+	top: -10px;
+}
+
+#hiddenOptionButtons {
+	visibility: hidden;
+}

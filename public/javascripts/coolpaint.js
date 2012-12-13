@@ -71,35 +71,23 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
       widthButton   = $('#widthButton');
       shapeSelectorButton  = $('#shapeSelectorButton');
       canvas = new fabric.Canvas('my-canvas');
+      mouseThings();
 
       jscolor.bind();
 
 /*                     PENCIL BUTTON                     */
       pencilButton.bind('click', function() {
         canvas.isDrawingMode = !canvas.isDrawingMode;
-        if (!canvas.isDrawingMode) {
-        	var lastObj = canvas.getObjects()[canvas.getObjects().length - 1];
-        	console.log(lastObj);
-        	var serializedObj = JSON.stringify(lastObj)
-        	
-        	//to communicate with the server
-        	socket.emit('newObject', {object: serializedObj});
-        	console.log("emit: " + serializedObj);
-        	console.log('canvas: ' + JSON.stringify(canvas));
-        	
-        	lastObj.remove();
-        	//canvas.loadFromJSON('{"objects":[' + serializedObj + ']}');
-        	//for (var i=0; i<canvas.getObjects().length; i++) {
-        	//	console.log(i + ": " + JSON.stringify(canvas.getObjects()[i]));
-        	//}
-        	
-        	addFromJSON(serializedObj);
-        	canvas.renderAll();
-        }
 
         if(selected !== null && selected !== pencilButton)
           selected.toggleOff();
         pencilButton.toggleOn();
+
+        //Clear the options menu, then move the pencil options up
+        $('#optionButtons img').appendTo($('#hiddenOptionButtons'));
+        $('#hiddenOptionButtons #colorButton').appendTo($('#optionButtons'));
+        $('#hiddenOptionButtons #widthButton').appendTo($('#optionButtons'));
+
       });
 
       pencilButton.toggleOn = function(){
@@ -123,6 +111,10 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
         if(selected !== null && selected !== handButton)
           selected.toggleOff();
         handButton.toggleOn();
+
+        //Clear the options menu, then move the hand options up
+        $('#optionButtons img').appendTo($('#hiddenOptionButtons'));
+        $('#hiddenOptionButtons #connectButton').appendTo($('#optionButtons'));
       });
 
       handButton.toggleOn = function(){
@@ -146,6 +138,14 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
           if(selected !== null && selected !== shapesButton)
           selected.toggleOff();
         shapesButton.toggleOn();
+
+        //Clear the options menu, then move the shape options up
+        $('#optionButtons img').appendTo($('#hiddenOptionButtons'));
+        $('#hiddenOptionButtons #widthButton').appendTo($('#optionButtons'));
+        $('#hiddenOptionButtons #shapeSelectorButton').appendTo($('#optionButtons'));
+        $('#hiddenOptionButtons #shapeOuterColor').appendTo($('#optionButtons'));
+        $('#hiddenOptionButtons #shapeInnerColor').appendTo($('#optionButtons'));
+
       });
 
       shapesButton.toggleOn = function(){
@@ -169,6 +169,8 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
         if(selected !== null && selected !== textButton)
           selected.toggleOff();
         textButton.toggleOn();
+
+        $('#optionButtons img').appendTo($('#hiddenOptionButtons'));
       });
 
       textButton.toggleOn = function(){
@@ -226,6 +228,30 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
 
 
     };
+    
+/*						MOUSE UP							*/
+    function mouseThings() {
+     	canvas.observe('mouse:up', function(e) {
+     		console.log("mouse:up observer");
+     		if (canvas.isDrawingMode) {
+     			var lastObj = canvas.getObjects()[canvas.getObjects().length - 1];
+        		console.log(lastObj);
+        		var serializedObj = JSON.stringify(lastObj)
+        	
+        		//to communicate with the server
+        		socket.emit('newObject', {object: serializedObj});
+        		console.log("emit: " + serializedObj);
+        	
+        		//lastObj.remove();
+        		//canvas.loadFromJSON('{"objects":[' + serializedObj + ']}');
+        		//for (var i=0; i<canvas.getObjects().length; i++) {
+        		//	console.log(i + ": " + JSON.stringify(canvas.getObjects()[i]));
+        		//}
+        		//addFromJSON(serializedObj);
+        		//canvas.renderAll();
+        	}
+     	});
+     };
 
     function socketThings() {
       socket.on('loginAllow', function(data){
@@ -256,6 +282,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
 
       socket.on('newObject', function(data){
         console.log('new object received! ' + JSON.stringify(data));
+        addFromJSON(data.object);
       });
     };
 

@@ -69,30 +69,12 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
       widthButton   = $('#widthButton');
       shapeSelectorButton  = $('#shapeSelectorButton');
       canvas = new fabric.Canvas('my-canvas');
+      mouseThings();
 
 
 /*                     PENCIL BUTTON                     */
       pencilButton.bind('click', function() {
         canvas.isDrawingMode = !canvas.isDrawingMode;
-        if (!canvas.isDrawingMode) {
-        	var lastObj = canvas.getObjects()[canvas.getObjects().length - 1];
-        	console.log(lastObj);
-        	var serializedObj = JSON.stringify(lastObj)
-        	
-        	//to communicate with the server
-        	socket.emit('newObject', {object: serializedObj});
-        	console.log("emit: " + serializedObj);
-        	console.log('canvas: ' + JSON.stringify(canvas));
-        	
-        	lastObj.remove();
-        	//canvas.loadFromJSON('{"objects":[' + serializedObj + ']}');
-        	//for (var i=0; i<canvas.getObjects().length; i++) {
-        	//	console.log(i + ": " + JSON.stringify(canvas.getObjects()[i]));
-        	//}
-        	
-        	addFromJSON(serializedObj);
-        	canvas.renderAll();
-        }
 
         if(selected !== null && selected !== pencilButton)
           selected.toggleOff();
@@ -243,6 +225,30 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
 
 
     };
+    
+/*						MOUSE UP							*/
+    function mouseThings() {
+     	canvas.observe('mouse:up', function(e) {
+     		console.log("mouse:up observer");
+     		if (canvas.isDrawingMode) {
+     			var lastObj = canvas.getObjects()[canvas.getObjects().length - 1];
+        		console.log(lastObj);
+        		var serializedObj = JSON.stringify(lastObj)
+        	
+        		//to communicate with the server
+        		socket.emit('newObject', {object: serializedObj});
+        		console.log("emit: " + serializedObj);
+        	
+        		//lastObj.remove();
+        		//canvas.loadFromJSON('{"objects":[' + serializedObj + ']}');
+        		//for (var i=0; i<canvas.getObjects().length; i++) {
+        		//	console.log(i + ": " + JSON.stringify(canvas.getObjects()[i]));
+        		//}
+        		//addFromJSON(serializedObj);
+        		//canvas.renderAll();
+        	}
+     	});
+     };
 
     function socketThings() {
       socket.on('loginAllow', function(data){

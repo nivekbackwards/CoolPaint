@@ -246,6 +246,11 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
         		//}
         		//addFromJSON(serializedObj);
         		//canvas.renderAll();
+        	} else {
+        		var lastObj = canvas.getActiveObject();
+        		var serializedObj = JSON.stringify(lastObj)
+        		//to communicate with the server
+        		socket.emit('newObject', {object: serializedObj});
         	}
      	});
      };
@@ -278,7 +283,7 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
       });
 
       socket.on('newObject', function(data){
-        console.log('new object received! ' + JSON.stringify(data));
+        console.log('new object received! ID=' + data.object.id + ' JSON=' +JSON.stringify(data));
         addFromJSON(data.object);
       });
     };

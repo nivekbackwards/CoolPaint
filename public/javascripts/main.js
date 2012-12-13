@@ -8,17 +8,17 @@ require(
              underscore:    'require_underscore',
              socketIO:      'require_socketIO',
              fabric:        'require_fabric',
-             jscolor:       'require_jscolor'
-             //jsondiffpatch: 'require_jsondiffpatch'
+             jscolor:       'require_jscolor',
+             jsondiffpatch: 'jsondiffpatch'
            },
   },
   
   // We then include the libraries we want to load for
   // our main application:
-  ['jquery', 'underscore', 'socketIO', 'coolpaint', 'fabric', 'jscolor'],//, 'jsondiffpatch'], 
+  ['jquery', 'underscore', 'socketIO', 'coolpaint', 'fabric', 'jscolor', 'jsondiffpatch'], 
   
   // Now we have the main application entry point:
-  function ($, _, chatApp, io, coolPaintApp, fabric, jscolor){//, jsondiffpatch) {
+  function ($, _, chatApp, io, coolPaintApp, fabric, jscolor, jsondiffpatch) {
     console.log("hello from main function");
   }
   

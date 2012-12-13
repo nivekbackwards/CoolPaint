@@ -1,8 +1,19 @@
 module.exports = WhiteboardState;
 
+var jsondiffpatch = require('jsondiffpatch');
+
 function WhiteboardState(){
-	this.whiteboardObjects = [];	
+	var currCanvasJSON;
+	//this.whiteboardObjects = [];	
 };
+
+WhiteboardState.prototype.makeChange = function(diff){
+	jsondiffpatch.patch(currCanvasJSON, diff);
+};
+
+
+
+/*
 
 WhiteboardState.prototype.addObject = function(newObject){
 	//maybe make some check if object is valid here?
@@ -39,3 +50,4 @@ WhiteboardState.prototype.editObject = function(id, attrName, attrValue){
   	else
   		console.log('unable to edit object with id [' + id + ']');
 };
+*/

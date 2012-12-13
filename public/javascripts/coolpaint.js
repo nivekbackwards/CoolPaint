@@ -91,6 +91,12 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
         if(selected !== null && selected !== pencilButton)
           selected.toggleOff();
         pencilButton.toggleOn();
+
+        //Clear the options menu, then move the pencil options up
+        $('#optionButtons img').appendTo($('#hiddenOptionButtons'));
+        $('#hiddenOptionButtons #colorButton').appendTo($('#optionButtons'));
+        $('#hiddenOptionButtons #widthButton').appendTo($('#optionButtons'));
+
       });
 
       pencilButton.toggleOn = function(){
@@ -114,6 +120,10 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
         if(selected !== null && selected !== handButton)
           selected.toggleOff();
         handButton.toggleOn();
+
+        //Clear the options menu, then move the hand options up
+        $('#optionButtons img').appendTo($('#hiddenOptionButtons'));
+        $('#hiddenOptionButtons #connectButton').appendTo($('#optionButtons'));
       });
 
       handButton.toggleOn = function(){
@@ -137,6 +147,14 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
           if(selected !== null && selected !== shapesButton)
           selected.toggleOff();
         shapesButton.toggleOn();
+
+        //Clear the options menu, then move the shape options up
+        $('#optionButtons img').appendTo($('#hiddenOptionButtons'));
+        $('#hiddenOptionButtons #widthButton').appendTo($('#optionButtons'));
+        $('#hiddenOptionButtons #shapeSelectorButton').appendTo($('#optionButtons'));
+        $('#hiddenOptionButtons #shapeOuterColor').appendTo($('#optionButtons'));
+        $('#hiddenOptionButtons #shapeInnerColor').appendTo($('#optionButtons'));
+
       });
 
       shapesButton.toggleOn = function(){
@@ -160,6 +178,8 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
         if(selected !== null && selected !== textButton)
           selected.toggleOff();
         textButton.toggleOn();
+
+        $('#optionButtons img').appendTo($('#hiddenOptionButtons'));
       });
 
       textButton.toggleOn = function(){

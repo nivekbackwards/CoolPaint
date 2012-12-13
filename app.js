@@ -14,6 +14,7 @@ app.configure(function(){
   app.use(express.session({ secret: 'your secret here' }));
   app.use(app.router);
   app.use(express.static(__dirname + '/public'));
+  app.use(express.favicon(__dirname + '/public/images/favicon.ico', { maxAge: 2592000 }));
 });
 
 app.configure('development', function(){
@@ -26,7 +27,7 @@ app.configure('production', function(){
 
 // Routes
 app.get('/', routes.index);
-app.get('/favicon.ico', routes.favicon);
+//app.get('/favicon.ico', routes.favicon);
 
 var server = http.createServer(app);
 

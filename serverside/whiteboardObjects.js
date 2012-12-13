@@ -3,12 +3,12 @@ module.exports = WhiteboardState;
 var jsondiffpatch = require('jsondiffpatch');
 
 function WhiteboardState(){
-	var currCanvasJSON;
+	var currCanvasJSON = '{}';
 	//this.whiteboardObjects = [];	
 };
 
 WhiteboardState.prototype.makeChange = function(diff){
-	jsondiffpatch.patch(currCanvasJSON, diff);
+	jsondiffpatch.patch(this.currCanvasJSON, diff);
 };
 
 

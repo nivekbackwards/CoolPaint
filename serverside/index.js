@@ -56,6 +56,7 @@ exports.init = function (socket) {
   	});
 
   	socket.on('newObject', function(data){
+  		console.log('received new object ' + JSON.stringify(data));
   		socket.emit('newObjectID', {id: idCounter});
   		data.object.id = idCounter;
   		socket.broadcast.emit('newObject', {object: data.object});

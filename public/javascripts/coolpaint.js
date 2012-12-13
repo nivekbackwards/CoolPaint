@@ -1,4 +1,4 @@
-define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
+define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, jscolor){
     var myName = null;
     var canvas;
 
@@ -32,6 +32,8 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
       loadImages();
       bindLoginThings();
       socketThings();
+
+      console.log(JSON.stringify(jscolor));
 		});
 
     function loadImages(){
@@ -71,6 +73,7 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
       canvas = new fabric.Canvas('my-canvas');
       mouseThings();
 
+      jscolor.bind();
 
 /*                     PENCIL BUTTON                     */
       pencilButton.bind('click', function() {

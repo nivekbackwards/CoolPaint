@@ -46,13 +46,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
 
 
       console.log('we have diffpatch?');
-<<<<<<< HEAD
-      //console.log(jsondiffpatch);
-      //console.log(JSON.stringify(jsondiffpatch));
-      console.log(JSON.stringify(jsondiffpatch.diff({hi:1}, {hi: 2})));
-=======
       console.log(jsondiffpatch.diff({same:1, different: 2}, {same: 1, different: 3}));
->>>>>>> f88ad5eb7c1ce308e06f3860fd68c7ee0cb88338
       console.log('tada!');
       
 		});
@@ -274,8 +268,8 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
      	canvas.observe('mouse:up', function(e) {
      		var currCanvasJSON = JSON.stringify(canvas);
      		var diff = jsondiffpatch.diff(prevCanvasJSON, currCanvasJSON);
-     		console.log('canvasDiff=' + diff);
-     		socket.emit('canvasDiff', {object: diff});
+     		console.log('canvasDiff=' + JSON.stringify(diff));
+     		socket.emit('canvasDiff', {diff: diff});
      		prevCanvasJSON = currCanvasJSON;
      	});
      };

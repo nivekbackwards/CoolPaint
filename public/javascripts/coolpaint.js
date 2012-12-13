@@ -84,10 +84,10 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
         pencilButton.toggleOn();
 
         //Clear the options menu, then move the pencil options up
-        $('#optionButtons img').appendTo($('#hiddenOptionButtons'));
+        $('#optionButtons .option').appendTo($('#hiddenOptionButtons'));
+        
         $('#hiddenOptionButtons #colorPickerWrapper').appendTo($('#optionButtons'));
         $('#hiddenOptionButtons #widthButton').appendTo($('#optionButtons'));
-
       });
 
       pencilButton.toggleOn = function(){
@@ -113,7 +113,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
         handButton.toggleOn();
 
         //Clear the options menu, then move the hand options up
-        $('#optionButtons img').appendTo($('#hiddenOptionButtons'));
+        $('#optionButtons .option').appendTo($('#hiddenOptionButtons'));
         $('#hiddenOptionButtons #connectButton').appendTo($('#optionButtons'));
       });
 
@@ -140,7 +140,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
         shapesButton.toggleOn();
 
         //Clear the options menu, then move the shape options up
-        $('#optionButtons img').appendTo($('#hiddenOptionButtons'));
+        $('#optionButtons .option').appendTo($('#hiddenOptionButtons'));
         $('#hiddenOptionButtons #widthButton').appendTo($('#optionButtons'));
         $('#hiddenOptionButtons #shapeSelectorButton').appendTo($('#optionButtons'));
         $('#hiddenOptionButtons #shapeOuterColor').appendTo($('#optionButtons'));
@@ -170,7 +170,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
           selected.toggleOff();
         textButton.toggleOn();
 
-        $('#optionButtons img').appendTo($('#hiddenOptionButtons'));
+        $('#optionButtons .option').appendTo($('#hiddenOptionButtons'));
       });
 
       textButton.toggleOn = function(){

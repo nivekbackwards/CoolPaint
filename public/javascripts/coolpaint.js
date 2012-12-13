@@ -85,7 +85,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
 
         //Clear the options menu, then move the pencil options up
         $('#optionButtons img').appendTo($('#hiddenOptionButtons'));
-        $('#hiddenOptionButtons #colorButton').appendTo($('#optionButtons'));
+        $('#hiddenOptionButtons #colorPickerWrapper').appendTo($('#optionButtons'));
         $('#hiddenOptionButtons #widthButton').appendTo($('#optionButtons'));
 
       });

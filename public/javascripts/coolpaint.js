@@ -13,6 +13,8 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
 
     var lineWidthPictures = [];
     var shapePictures = [];
+    
+    var newObj;
 
     $.fn.textWidth = function(){
       var html_org = $(this).html();
@@ -279,15 +281,20 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
         console.log('received lots of messages ' + JSON.stringify(messages));
         for(var i=0; i<messages.length; i++)
           displayChatMessage(messages[i].from, messages[i].message, new Date());
-      })
+      });
 
       socket.on('loginReject', function(){
         console.log('username rejected');
       });
 
       socket.on('newObject', function(data){
-        console.log('new object received! ID=' + data.object.id + ' JSON=' +JSON.stringify(data));
+        console.log('new object received! ID=' + data.object.id + ' DATA=' );
+        console.log(data);
         addFromJSON(data.object);
+      });
+      
+      socket.on('newObjectID', function(data) {
+      	console.log("new objectID received=" + data.id);
       });
     };
 

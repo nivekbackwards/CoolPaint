@@ -1,6 +1,8 @@
-define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, jscolor){
+define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($, fabric, socket, jscolor, jsondiffpatch){
+
     var myName = null;
     var canvas;
+    var prevCanvasJSON;
 
     var pencilButton;
     var handButton;
@@ -38,7 +40,16 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
       bindLoginThings();
       socketThings();
 
+      console.log('we have jscolor?');
       console.log(JSON.stringify(jscolor));
+
+
+      console.log('we have diffpatch?');
+      //console.log(jsondiffpatch);
+      //console.log(JSON.stringify(jsondiffpatch));
+      console.log(jsondiffpatch.diff({hi:1}, {hi: 2}));
+      console.log('tada!');
+      
 		});
 
     function loadImages(){
@@ -255,30 +266,11 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
 /*						MOUSE UP							*/
     function mouseUpAttach() {
      	canvas.observe('mouse:up', function(e) {
-     		//console.log("mouse:up observer");
-     		if (canvas.isDrawingMode) {
-     			var lastObj = canvas.getObjects()[canvas.getObjects().length - 1];
-        		//console.log(lastObj);
-        		var serializedObj = JSON.stringify(lastObj)
-        	
-        		//to communicate with the server
-        		socket.emit('newObject', {object: serializedObj});
-        		//console.log("canvas: " + JSON.stringify(canvas));
-        	
-        		//lastObj.remove();
-        		//canvas.loadFromJSON('{"objects":[' + serializedObj + ']}');
-        		//for (var i=0; i<canvas.getObjects().length; i++) {
-        		//	console.log(i + ": " + JSON.stringify(canvas.getObjects()[i]));
-        		//}
-        		//addFromJSON(serializedObj);
-        		//canvas.renderAll();
-        	} else {
-        		var lastObj = canvas.getActiveObject();
-        		var serializedObj = JSON.stringify(lastObj)
-        		//to communicate with the server
-        		socket.emit('newObject', {object: serializedObj});
-        		//console.log("canvas: " + JSON.stringify(canvas));
-        	}
+     		var currCanvasJSON = JSON.stringify(canvas);
+     		var diff = jsondiffpatch.diff(prevCanvasJSON, currCanvasJSON);
+     		console.log('canvasDiff=' + diff);
+     		socket.emit('canvasDiff', {object: diff});
+     		prevCanvasJSON = currCanvasJSON;
      	});
      };
 
@@ -309,16 +301,13 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
         console.log('username rejected');
       });
 
-      socket.on('newObject', function(data){
-        console.log('new object received! ID=' + data.object.id + ' DATA=' );
-        console.log(data);
-        addFromJSON(data.object);
+      socket.on('canvasDiff', function(data){
+        console.log('new canvasDiff received=' + data.diff );
+        jsondiffpatch.patch(currCanvasJSON, data.diff);
+        prevCanvasJSON = currCanvasJSON;
+        canvas.loadFromJSON(currCanvasJSON);
       });
       
-      socket.on('newObjectID', function(data) {
-      	console.log("new objectID received=" + data.id);
-      	lastObj.id = data.id;
-      });
     };
 
 

@@ -27,7 +27,6 @@ app.configure('production', function(){
 
 // Routes
 app.get('/', routes.index);
-//app.get('/favicon.ico', routes.favicon);
 
 var server = http.createServer(app);
 

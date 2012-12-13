@@ -334,6 +334,11 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
         canvas.loadFromJSON(currCanvasJSON);
       });
       
+      socket.on('canvasJSON', function(data) {
+      	currCanvasJSON = data.canvas;
+      	prevCanvasJSON = currCanvasJSON;
+      	canvas.loadFromJSON(currCanvasJSON);
+      
     };
 
 

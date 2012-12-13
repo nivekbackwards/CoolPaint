@@ -55,6 +55,7 @@
                 return dmp.patch_toText(dmp.patch_make(txt1, txt2));
             }
             jdp.config.textPatch = function(txt1, patch){
+                console.log('so this function is being called');
                 var results = dmp.patch_apply(dmp.patch_fromText(patch), txt1);
                 for (var i = 0; i < results[1].length; i++) {
                     if (!results[1][i]) {
@@ -279,6 +280,7 @@
     };
     
     var objectGet = function(obj, key){
+        console.log('getting something, params are ' + obj + '  AND  ' + key);
         if (isArray(obj) && obj._key) {
             var getKey = obj._key;
             if (typeof obj._key != 'function') {
@@ -293,6 +295,9 @@
             }
             return;
         }
+        console.log('finished getting smething, key is [' + key + ']');
+        console.log('[' + obj[key] + ']');
+        console.log('yeah...'); 
         return obj[key];
     };
     
@@ -446,9 +451,13 @@
     }
     
     var patch = jdp.patch = function(o, pname, d, path) {
+        console.log('some method is being called, params are {' + o + ', ' + pname + ', ' + d + ', ' + path + '}');
     
         var p, nvalue, subpath = '', target;
         
+        console.log('original type of pname is [' + typeof(pname) + ']');
+        console.log('original type of o     is [' + typeof(o) + ']');
+
         if (typeof pname != 'string') {
             path = d;
             d = pname;
@@ -459,6 +468,7 @@
                 pname = null;
             }
         }
+        console.log('after some shit, pname is [' + pname + ']');
         
         if (path) {
             subpath += path;
@@ -500,7 +510,10 @@
                                 throw new Error("textPatch function not found");
                             }
                             try {
-                                nvalue = jdp.config.textPatch(objectGet(o, pname), d[0]);
+                                console.log('type of textPatch [' + typeof(jdp.config.textPatch) + ']');
+                                var first = objectGet(o, pname);
+                                console.log('and theres the problem');
+                                nvalue = jdp.config.textPatch(first, d[0]);
                             } 
                             catch (text_patch_err) {
                                 throw new Error('cannot apply patch at "' + subpath + '": ' + text_patch_err);

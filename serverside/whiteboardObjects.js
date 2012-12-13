@@ -1,13 +1,15 @@
 module.exports = WhiteboardState;
 
-var jsondiffpatch = require('jsondiffpatch');
+var jsondiffpatch = require('./jdp/jsondiffpatch.min.js');
+jsondiffpatch.config.diff_match_patch = require('./jdp/diff_match_patch_uncompressed.js');
+jsondiffpatch.config.textDiffMinLength = 5;
 
 function WhiteboardState(){
-	var currCanvasJSON = '{}';
-	//this.whiteboardObjects = [];	
+	this.currCanvasJSON = '{"objects":[], "background":"rgba(0,0,0,0)"}';
 };
 
 WhiteboardState.prototype.makeChange = function(diff){
+	console.log('type of diff is [' + typeof(diff) + ']');
 	jsondiffpatch.patch(this.currCanvasJSON, diff);
 };
 

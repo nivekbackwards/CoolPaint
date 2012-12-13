@@ -269,7 +269,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
      		var currCanvasJSON = JSON.stringify(canvas);
      		var diff = jsondiffpatch.diff(prevCanvasJSON, currCanvasJSON);
      		console.log('canvasDiff=' + JSON.stringify(diff));
-     		socket.emit('canvasDiff', {diff: diff});
+     		socket.emit('canvasDiff', {diff: JSON.stringify(diff)});
      		prevCanvasJSON = currCanvasJSON;
      	});
      };

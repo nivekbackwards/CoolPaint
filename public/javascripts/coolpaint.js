@@ -2,6 +2,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
 
     var myName = null;
     var canvas;
+    var prevCanvasJSON;
 
     var pencilButton;
     var handButton;
@@ -9,13 +10,16 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
     var shapesButton;
     var widthButton;
     var shapeSelectorButton;
+    var colorPicker;
     var selected = null;
     var chatTextArea;
 
     var lineWidthPictures = [];
     var shapePictures = [];
     
-    var newObj;
+    var lastObj;
+    var lineWidth = 3;
+    var color = 'FFFFFF'
 
     $.fn.textWidth = function(){
       var html_org = $(this).html();
@@ -82,8 +86,10 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
       shapesButton  = $('#shapesButton');
       widthButton   = $('#widthButton');
       shapeSelectorButton  = $('#shapeSelectorButton');
+      colorPicker = $('#colorPicker');
       canvas = new fabric.Canvas('my-canvas');
-      mouseThings();
+      mouseDownAttach();
+      mouseUpAttach();
 
       jscolor.bind();
 
@@ -197,10 +203,19 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
         var upPic = '/images/textUp.png';
         textButton.attr('src', upPic);
       }
+      
+/*						COLOR PICKER					*/
+	  colorPicker.change(function() {
+	  	console.log('colorPicker change');
+	  	color = colorPicker.val();
+	  	canvas.freeDrawingColor = color;
+	  });
+		
 
 
 /*                     WIDTH BUTTON                     */      
       var currWidthImageIdx = 1;
+      canvas.freeDrawingLineWidth = lineWidth;
       widthButton.bind('click', function(){
         // actually do something when width button is clicked
         console.log("clicking width doesn't do anything");
@@ -210,6 +225,8 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
       widthButton.cycle = function(){
         currWidthImageIdx = (currWidthImageIdx + 1) % lineWidthPictures.length;
         widthButton.attr('src', lineWidthPictures[currWidthImageIdx]);
+        lineWidth = 2 * currWidthImageIdx + 1;
+        canvas.freeDrawingLineWidth = lineWidth;
       };
 
 
@@ -240,33 +257,20 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
 
 
     };
+
+/*						MOUSE DOWN							*/
+	function mouseDownAttach() {
+		canvas.observe('mouse:down', function(e) {		});
+	}
     
 /*						MOUSE UP							*/
-    function mouseThings() {
+    function mouseUpAttach() {
      	canvas.observe('mouse:up', function(e) {
-     		console.log("mouse:up observer");
-     		if (canvas.isDrawingMode) {
-     			var lastObj = canvas.getObjects()[canvas.getObjects().length - 1];
-        		console.log(lastObj);
-        		var serializedObj = JSON.stringify(lastObj)
-        	
-        		//to communicate with the server
-        		socket.emit('newObject', {object: serializedObj});
-        		console.log("emit: " + serializedObj);
-        	
-        		//lastObj.remove();
-        		//canvas.loadFromJSON('{"objects":[' + serializedObj + ']}');
-        		//for (var i=0; i<canvas.getObjects().length; i++) {
-        		//	console.log(i + ": " + JSON.stringify(canvas.getObjects()[i]));
-        		//}
-        		//addFromJSON(serializedObj);
-        		//canvas.renderAll();
-        	} else {
-        		var lastObj = canvas.getActiveObject();
-        		var serializedObj = JSON.stringify(lastObj)
-        		//to communicate with the server
-        		socket.emit('newObject', {object: serializedObj});
-        	}
+     		var currCanvasJSON = JSON.stringify(canvas);
+     		var diff = jsondiffpatch.diff(prevCanvasJSON, currCanvasJSON);
+     		console.log('canvasDiff=' + diff);
+     		socket.emit('canvasDiff', {object: diff});
+     		prevCanvasJSON = currCanvasJSON;
      	});
      };
 
@@ -297,15 +301,13 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
         console.log('username rejected');
       });
 
-      socket.on('newObject', function(data){
-        console.log('new object received! ID=' + data.object.id + ' DATA=' );
-        console.log(data);
-        addFromJSON(data.object);
+      socket.on('canvasDiff', function(data){
+        console.log('new canvasDiff received=' + data.diff );
+        jsondiffpatch.patch(currCanvasJSON, data.diff);
+        prevCanvasJSON = currCanvasJSON;
+        canvas.loadFromJSON(currCanvasJSON);
       });
       
-      socket.on('newObjectID', function(data) {
-      	console.log("new objectID received=" + data.id);
-      });
     };
 
 

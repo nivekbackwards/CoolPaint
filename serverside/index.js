@@ -7,7 +7,7 @@ var chatMessageList		= new MessageListClass();
 var WhiteboardObjectsClass 	= require('./whiteboardObjects');
 var whiteboardState 		= new WhiteboardObjectsClass;
 
-var idCounter = 0;
+//var idCounter = 0;
 
 exports.init = function (socket) {
 
@@ -49,12 +49,27 @@ exports.init = function (socket) {
 		}
 	});
 
+
   	socket.on('chatMessage', function (data) {
     	console.log('Received chat message: ' + JSON.stringify(data));
     	chatMessageList.addMessage(data.from, data.message, data.time);
 	    socket.broadcast.emit('chatMessage', data);
   	});
 
+/*
+		socket.emit('canvasDiff', {diff: })
+
+		socket.on('canvasDiff', function(data){
+			data.diff
+		})
+  	*/
+
+  	socket.on('canvasDiff', function(data){
+  		whiteboardState.makeChange(data.diff);
+  		socket.emit('canvasDiff', {diff: data.diff});
+  	});
+
+/*
   	socket.on('newObject', function(data){
   		console.log('received new object ' + JSON.stringify(data));
   		socket.emit('newObjectID', {id: idCounter});
@@ -83,5 +98,9 @@ exports.init = function (socket) {
   		whiteboardState.removeObject(id);
   		socket.broadcast.emit('removeObject', {id: id});
   	});
+*/
+
+
+  	
 
 };

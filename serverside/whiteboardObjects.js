@@ -5,12 +5,19 @@ jsondiffpatch.config.diff_match_patch = require('./jdp/diff_match_patch_uncompre
 jsondiffpatch.config.textDiffMinLength = 5;
 
 function WhiteboardState(){
-	this.currCanvasJSON = '{"objects":[], "background":"rgba(0,0,0,0)"}';
+	this.currCanvasJSON = {};//'{"objects":[], "background":"rgba(0,0,0,0)"}';
 };
 
 WhiteboardState.prototype.makeChange = function(diff){
 	console.log('type of diff is [' + typeof(diff) + ']');
 	jsondiffpatch.patch(this.currCanvasJSON, diff);
+
+	console.log('\n\n\nafter the change, the canvas is ' + this.currCanvasJSON + '\n\n\n');
+};
+
+WhiteboardState.prototype.getCanvas = function(){
+	console.log('\n\n\nsending over the whole canvas! ' + this.currCanvasJSON + '\n\n\n');
+	return this.currCanvasJSON;
 };
 
 

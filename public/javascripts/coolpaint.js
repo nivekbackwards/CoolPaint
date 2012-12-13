@@ -82,9 +82,15 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
         	//to communicate with the server
         	socket.emit('newObject', {object: serializedObj});
         	console.log("emit: " + serializedObj);
+        	console.log('canvas: ' + JSON.stringify(canvas));
         	
         	lastObj.remove();
-        	canvas.loadFromJSON('{"objects":[' + serializedObj + ']}');
+        	//canvas.loadFromJSON('{"objects":[' + serializedObj + ']}');
+        	//for (var i=0; i<canvas.getObjects().length; i++) {
+        	//	console.log(i + ": " + JSON.stringify(canvas.getObjects()[i]));
+        	//}
+        	
+        	addFromJSON(serializedObj);
         	canvas.renderAll();
         }
 
@@ -267,6 +273,7 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
 
       socket.on('newObject', function(data){
         console.log('new object received! ' + JSON.stringify(data));
+        addFromJSON(data.object);
       });
     };
 
@@ -312,6 +319,16 @@ define(['jquery', 'fabric', 'socketIO'], function($, fabric, socket){
         str = str.substring(50);
       }
       return result;
+    }
+    
+    function addFromJSON(json) {
+    	var newCanvas = '{"objects":[';
+    	for (var i=0; i<canvas.getObjects().length; i++) {
+        	newCanvas += JSON.stringify(canvas.getObjects()[i]) + ',';
+        }
+        newCanvas += json + ']}';
+        canvas.loadFromJSON(newCanvas);
+    	
     }
     
 

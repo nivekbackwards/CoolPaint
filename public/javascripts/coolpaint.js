@@ -335,6 +335,8 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
       });
       
       socket.on('canvasJSON', function(data) {
+        console.log('received new canvas!!!');
+        console.log(data.canvas);
       	currCanvasJSON = data.canvas;
       	prevCanvasJSON = currCanvasJSON;
       	canvas.loadFromJSON(currCanvasJSON);

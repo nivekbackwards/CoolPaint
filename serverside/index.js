@@ -65,8 +65,8 @@ exports.init = function (socket) {
   	*/
 
   	socket.on('canvasDiff', function(data){
-  		whiteboardState.makeChange(data.diff);
   		socket.emit('canvasDiff', {diff: data.diff});
+  		whiteboardState.makeChange(data.diff);
   	});
 
 /*

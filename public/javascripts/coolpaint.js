@@ -93,6 +93,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
       rastaButton = $('#rastaButton');
       clearCanvasButton = $('#clearCanvasButton');
       prevCanvasJSON = JSON.stringify(canvas);
+      console.log("empty= " + prevCanvasJSON);
       currCanvasJSON = JSON.stringify(canvas);
 
       mouseDownAttach();
@@ -303,7 +304,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
 //      		currCanvasJSON = jsondiffpatch.patch(prevCanvasJSON, diff);
 //      		canvas.loadFromJSON(currCanvasJSON);
      	
-     		socket.emit('canvasDiff', {diff: diff});
+     		socket.emit('canvasDiff', {diff: JSON.stringify(diff)});
      		prevCanvasJSON = currCanvasJSON;
      	});
      };

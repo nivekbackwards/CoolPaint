@@ -21,7 +21,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
     var lastObj;
     var lineWidth = 3;
     var color = 'FFFFFF'
-    jsondiffpatch.config.diff_match_patch = require([diff_match_patch_uncompressed]);
+
 
     $.fn.textWidth = function(){
       var html_org = $(this).html();

@@ -19,8 +19,8 @@ require(
   ['jquery', 'underscore', 'socketIO', 'coolpaint', 'fabric', 'jscolor', 'jsondiffpatch', 'diff_match_patch'], 
   
   // Now we have the main application entry point:
-  function ($, _, chatApp, io, coolPaintApp, fabric, jscolor, jsondiffpatch, diff_match_patch) {
-    jsondiffpatch.config.diff_match_patch = diff_match_patch;
+  function ($, _, chatApp, io, coolPaintApp, fabric, jscolor, jdp, diff_match_patch) {
+    jdp.config.diff_match_patch = diff_match_patch;
     console.log("hello from main function");
   }
   

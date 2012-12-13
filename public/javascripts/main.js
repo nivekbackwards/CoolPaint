@@ -7,16 +7,17 @@ require(
   { paths: { jquery: 'require_jquery',
              underscore: 'require_underscore',
              socketIO: 'require_socketIO',
-             fabric: 'require_fabric'
+             fabric: 'require_fabric',
+             jscolor: 'require_jscolor'
            },
   },
   
   // We then include the libraries we want to load for
   // our main application:
-  ['jquery', 'underscore', 'socketIO', 'coolpaint', 'fabric'], 
+  ['jquery', 'underscore', 'socketIO', 'coolpaint', 'fabric', 'jscolor'], 
   
   // Now we have the main application entry point:
-  function ($, _, chatApp, io, coolPaintApp, fabric) {
+  function ($, _, chatApp, io, coolPaintApp, fabric, jscolor) {
     console.log("hello from main function");
   }
   

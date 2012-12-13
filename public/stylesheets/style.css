@@ -130,3 +130,11 @@ img {
 #hiddenOptionButtons {
 	visibility: hidden;
 }
+
+.color {
+	position: absolute;
+	width: 65px;
+	height: 63px;
+	top: 9px;
+	left: 9px;
+}

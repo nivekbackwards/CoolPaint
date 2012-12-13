@@ -18,7 +18,7 @@ exports.init = function (socket) {
 			socketUserMapping.addUser(socket, username);								// add username to list
 			socket.emit('loginAllow', {yourName: username});							// allow client to login
 			socket.emit('messages', {messageList: chatMessageList.messageList});		// send client list of chat messages
-			socket.emit('canvasJSON', {whiteboardObjects: whiteboardState.currCanvasJSON});		// send client current state of whiteboard
+			socket.emit('canvasJSON', {canvas: whiteboardState.currCanvasJSON});		// send client current state of whiteboard
 		}
 		else{																		// otherwise
 			socket.emit('loginReject');													// reject the login

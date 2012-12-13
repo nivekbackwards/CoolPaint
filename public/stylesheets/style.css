@@ -131,6 +131,12 @@ img {
 	visibility: hidden;
 }
 
+#menuButtons {
+	position: absolute;
+top: -10px;
+left: 1196px;
+}
+
 .color {
 position: absolute;
 width: 73px;

@@ -98,7 +98,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
 
 /*                     PENCIL BUTTON                     */
       pencilButton.bind('click', function() {
-        canvas.isDrawingMode = !canvas.isDrawingMode;
+        canvas.isDrawingMode = true;
 
         if(selected !== null && selected !== pencilButton)
           selected.toggleOff();
@@ -127,7 +127,8 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
               
 /*                     HAND BUTTON                     */
       handButton.bind('click', function(){
-        console.log("clicking the hand doesn't do anything!!!");
+        canvas.isDrawingMode = false;
+        
         // actually do something with this handbutton click
         if(selected !== null && selected !== handButton)
           selected.toggleOff();

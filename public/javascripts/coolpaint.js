@@ -1,4 +1,4 @@
-define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, jscolor){
+define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($, fabric, socket, jscolor, jsondiffpatch){
 
     var myName = null;
     var canvas;
@@ -45,13 +45,13 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor'], function($, fabric, socket, 
       console.log('we have jscolor?');
       console.log(JSON.stringify(jscolor));
 
-/*
+
       console.log('we have diffpatch?');
-      console.log(jsondiffpatch);
-      console.log(JSON.stringify(jsondiffpatch));
+      //console.log(jsondiffpatch);
+      //console.log(JSON.stringify(jsondiffpatch));
       console.log(jsondiffpatch.diff({hi:1}, {hi: 2}));
       console.log('tada!');
-      */
+      
 		});
 
     function loadImages(){

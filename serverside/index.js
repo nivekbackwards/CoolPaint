@@ -58,8 +58,13 @@ exports.init = function (socket) {
   	socket.on('newObject', function(data){
   		console.log('received new object ' + JSON.stringify(data));
   		socket.emit('newObjectID', {id: idCounter});
-  		data.object.id = idCounter;
-  		socket.broadcast.emit('newObject', {object: data.object});
+  		var myObj = {};
+  		//myObj = data.object;
+  		//myObj.wtf = "WSADFASJFLASJFLJASDF;LJASFL;SDAJ";
+
+  		myObj.actualObject = data.object;
+  		myObj.id = idCounter;
+  		socket.broadcast.emit('newObject', {object: myObj});
   		whiteboardState.addObject(data.object);
   		idCounter++;
   	});

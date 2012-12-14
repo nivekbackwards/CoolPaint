@@ -16,6 +16,7 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
     var colorPicker;
     var selected = null;
     var chatTextArea;
+    var connectedUserList;
 
     var lineWidthPictures = [];
     var shapePictures = [];
@@ -42,8 +43,7 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
 
       loadImages();
       bindLoginThings();
-      socketThings();
-     
+      socketThings(); 
 		});
 
     function loadImages(){
@@ -73,17 +73,18 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
     };
 
     function bindDrawThings(){
-      pencilButton  = $("#pencilButton");
-      chatTextArea  = $('#chat-text-area');
-      handButton    = $('#handButton');
-      textButton    = $('#textButton');
-      shapesButton  = $('#shapesButton');
-      widthButton   = $('#widthButton');
-      shapeSelectorButton  = $('#shapeSelectorButton');
-      colorPicker = $('#colorPicker');
+      pencilButton          = $("#pencilButton");
+      chatTextArea          = $('#chat-text-area');
+      handButton            = $('#handButton');
+      textButton            = $('#textButton');
+      shapesButton          = $('#shapesButton');
+      widthButton           = $('#widthButton');
+      connectedUserList     = $('#connectedUsers');
+      shapeSelectorButton   = $('#shapeSelectorButton');
+      colorPicker           = $('#colorPicker');
+      rastaButton           = $('#rastaButton');
+      clearCanvasButton     = $('#clearCanvasButton');
       canvas = new fabric.Canvas('my-canvas');
-      rastaButton = $('#rastaButton');
-      clearCanvasButton = $('#clearCanvasButton');
       prevCanvasJSON = JSON.stringify(canvas);
       currCanvasJSON = JSON.stringify(canvas);
       
@@ -270,8 +271,6 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
         }
       });
 
-
-
     };
 
 /*						MOUSE DOWN							*/
@@ -338,6 +337,40 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
       	prevCanvasJSON = currCanvasJSON;
       	canvas.loadFromJSON(currCanvasJSON);
       });
+
+      socket.on('users', function(data){
+        console.log('got a whole bunch of users {' + data.userList + '}');
+        for(var i=0; i<data.userList.length; i++){
+          addUser(data.userList[i]);
+        }
+      });
+
+      socket.on('userJoined', function(data){
+        addUser(data.username);
+      }); 
+
+      socket.on('userLeft', function(data){
+        removeUser(data.username);
+      });
+
+    };
+
+    function addUser(username){
+      if(username !== myName){      // because we don't want to draw our own name in the userlist...
+        console.log('user [' + username + '] joined');
+        var newUserElt = $('<li>');
+        newUserElt.attr('id', 'user_' + username);
+        newUserElt.text(username);
+        connectedUserList.append(newUserElt);
+        displayInfoMessage('user [' + username + '] has joined the party!');
+      }
+    };
+
+    function removeUser(username){
+      console.log('user [' + username + '] left');
+      var id = '#user_' + username;
+      $(id).remove();
+      displayInfoMessage('user [' + username + '] has left the party');
     };
 
 
@@ -354,6 +387,13 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
       */
     //}
 
+    function displayInfoMessage(theMessage){
+      var messageObject = $('<li>');
+      messageObject.text(theMessage);
+      messageObject.css('visibility', 'hidden');
+      $('#message-list').append(messageObject);
+      makeElementMultiline(messageObject);
+    };
 
     function displayChatMessage(from, theMessage, time){
       var numHours;
@@ -399,10 +439,6 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
     }
     
 
-    
-
-    
-		
 		function pad(str, length) {
 			while (str.length < length) {
 				str = '0' + str;
@@ -494,13 +530,5 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
     	canvas.add(textSample);
     	updateComplexity();
    	 	};
-
-/*
-      var testObj = {
-        test:"hello from coolpaint module!"
-      };
-
-      return testObj;
-      */
 
 });

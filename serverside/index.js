@@ -12,10 +12,15 @@ exports.init = function (socket) {
 		console.log('user attempting to connect ' + JSON.stringify(data));
 		var username = data.username;
 		if(socketUserMapping.goodName(username)){									// if this username is valid
-			socketUserMapping.addUser(socket, username);								// add username to list
+			socketUserMapping.addUser(username, socket);								// add username to list
 			socket.emit('loginAllow', {yourName: username});							// allow client to login
 			socket.emit('messages', {messageList: chatMessageList.messageList});		// send client list of chat messages
 			socket.emit('canvasJSON', {canvas: whiteboardState.getCanvas()});		// send client current state of whiteboard
+			var datuserlist = socketUserMapping.getUserList();
+			console.log('sending list of users ' + JSON.stringify(datuserlist));
+			//socket.emit('users', {userList: socketUserMapping.getUserList()});
+			socket.emit('users', {userList: datuserlist});
+			socket.broadcast.emit('userJoined', {username: username});
 		}
 		else{																		// otherwise
 			socket.emit('loginReject');													// reject the login

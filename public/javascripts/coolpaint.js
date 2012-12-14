@@ -297,12 +297,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'diff_match_patch'], function
      		currCanvasJSON = JSON.stringify(canvas);
      		var patches = diffMainPatches.patch_make(prevCanvasJSON, currCanvasJSON);
      		console.log(patches);
-
-<<<<<<< HEAD
      		socket.emit('canvasDiff', {patches: patches});
-=======
-     		socket.emit('canvasDiff', {diff: JSON.stringify(diff)});
->>>>>>> 46d5f92a10fad41c890eaea03be2b1f2c8636139
      		prevCanvasJSON = currCanvasJSON;
      	});
      };

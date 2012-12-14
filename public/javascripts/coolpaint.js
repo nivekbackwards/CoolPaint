@@ -4,7 +4,6 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'diff_match_patch'], function
     var canvas;
     var prevCanvasJSON;
     var currCanvasJSON;
-    var diffMatchPatch;
 
     var rastaButton;
     var clearCanvasButton;
@@ -49,14 +48,9 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'diff_match_patch'], function
       console.log('we have jscolor?');
       console.log(JSON.stringify(jscolor));
 
-	  //diffMatchPatch = new diff_match_patch();
-      //console.log('we have diffpatch?');
-      //console.log(diffMatchPatch.diff_main("{same:1, different: 2}", "{same: 1, different: 3}"));
-      //console.log('tada!');
-
-      console.log('le patcher');
-      console.log(diff_match_patch);
-
+      console.log('we have diffpatch?');
+      console.log(diff_match_patch.diff_main("{same:1, different: 2}", "{same: 1, different: 3}"));
+      console.log('tada!');
       
 		});
 
@@ -298,7 +292,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'diff_match_patch'], function
     function mouseUpAttach() {
      	canvas.observe('mouse:up', function(e) {
      		currCanvasJSON = JSON.stringify(canvas);
-     		var patches = diffMainPatches.patch_make(prevCanvasJSON, currCanvasJSON);
+     		var patches = diff_match_patch.patch_make(prevCanvasJSON, currCanvasJSON);
      		console.log(patches);
      		socket.emit('canvasDiff', {patches: patches});
      		prevCanvasJSON = currCanvasJSON;
@@ -334,14 +328,14 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'diff_match_patch'], function
 
       socket.on('canvasDiff', function(data){
         console.log('new canvasDiff received=' + data.patches );
-        currCanvasJSON = diffMatchPatch.patch_apply(data.patches, currCanvasJSON)[0];
+        currCanvasJSON = diff_match_patch.patch_apply(data.patches, currCanvasJSON)[0];
         prevCanvasJSON = currCanvasJSON;
         canvas.loadFromJSON(currCanvasJSON);
       });
       
       socket.on('canvasJSON', function(data) {
         console.log('received new canvas!!!');
-        console.log(data.canvas);
+        //console.log(data.canvas);
       	currCanvasJSON = data.canvas;
       	prevCanvasJSON = currCanvasJSON;
       	canvas.loadFromJSON(currCanvasJSON);

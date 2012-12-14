@@ -372,7 +372,7 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
         newUserElt.css('color', userColorMapping[username]);
         newUserElt.text(username);
         connectedUserList.append(newUserElt);
-        displayInfoMessage('user [' + username + '] has joined the party!', userColorMapping[username]);
+        displayInfoMessage(username + ' has joined the party!', userColorMapping[username]);
       }
     };
 
@@ -381,7 +381,7 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
         console.log('user [' + username + '] left');
         var id = '#user_' + username;
         $(id).remove();
-        displayInfoMessage('user [' + username + '] has left the party');
+        displayInfoMessage(username + ' has left the party', userColorMapping[username]);
         userColorMapping.username = undefined;
       }
     };

@@ -373,6 +373,10 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
     function makeElementMultiline(element){
       element.text(addNewlines(element.text()));
       element.css('visibility', 'visible');
+
+      $('#message-list').animate({
+        scrollTop: element.offset().top
+      }, 0);
     }
 
     function addNewlines(str){

@@ -1,6 +1,10 @@
 define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric, socket, diff_match_patch){
 
     var myName = null;
+    var myColor = getRandomColor();
+
+    var userColorMapping = {};
+
     var canvas;
     var prevCanvasJSON = "";
     var currCanvasJSON = "";
@@ -44,6 +48,10 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
       loadImages();
       bindLoginThings();
       socketThings(); 
+
+
+      console.log('background color is');
+      console.log($(this).css('background-color'));
 		});
 
     function loadImages(){
@@ -357,20 +365,25 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
 
     function addUser(username){
       if(username !== myName){      // because we don't want to draw our own name in the userlist...
+        userColorMapping[username] = getRandomColor();
         console.log('user [' + username + '] joined');
         var newUserElt = $('<li>');
         newUserElt.attr('id', 'user_' + username);
+        newUserElt.css('color', userColorMapping[username]);
         newUserElt.text(username);
         connectedUserList.append(newUserElt);
-        displayInfoMessage('user [' + username + '] has joined the party!');
+        displayInfoMessage('user [' + username + '] has joined the party!', userColorMapping[username]);
       }
     };
 
     function removeUser(username){
-      console.log('user [' + username + '] left');
-      var id = '#user_' + username;
-      $(id).remove();
-      displayInfoMessage('user [' + username + '] has left the party');
+      if(username !== null){
+        console.log('user [' + username + '] left');
+        var id = '#user_' + username;
+        $(id).remove();
+        displayInfoMessage('user [' + username + '] has left the party');
+        userColorMapping.username = undefined;
+      }
     };
 
 
@@ -387,10 +400,11 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
       */
     //}
 
-    function displayInfoMessage(theMessage){
+    function displayInfoMessage(theMessage, color){
       var messageObject = $('<li>');
       messageObject.text(theMessage);
       messageObject.css('visibility', 'hidden');
+      messageObject.css('color', color);
       $('#message-list').append(messageObject);
       makeElementMultiline(messageObject);
     };
@@ -404,6 +418,12 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
       }
       var messageObject = $('<li>');
       messageObject.text('[' + numHours + ':' + numMinutes + '] ' + from + ': ' + theMessage);
+      if(from === 'Me'){
+        console.log('setting my message to [' + myColor + ']');
+        messageObject.css('color', myColor);
+      }
+      else
+        messageObject.css('color', userColorMapping[from]);
 
       messageObject.css('visibility', 'hidden');
       $('#message-list').append(messageObject);
@@ -531,4 +551,35 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
     	updateComplexity();
    	 	};
 
+
+      function getRandomColor(){
+        var r = Math.floor(Math.random()*256);
+        var g = Math.floor(Math.random()*256);
+        var b = Math.floor(Math.random()*256);
+
+        // darkens the color by 20%
+        r = parseInt(r*(100-20)/100);
+        g = parseInt(g*(100-20)/100);
+        b = parseInt(b*(100-20)/100);
+
+        return getHex(r,g,b);
+      };
+
+      function intToHex(n){
+        n = n.toString(16);
+        if(n.length < 2)
+          n = "0"+n;
+        return n;
+      };
+
+      function getHex(r,g,b){
+        console.log('r:' + r);
+        console.log('g:' + g);
+        console.log('b:' + b);
+        var colorString = '#' + intToHex(r) + intToHex(g) + intToHex(b);
+        console.log('my number is [' + colorString + ']!');
+        return colorString;
+      };
+
+      
 });

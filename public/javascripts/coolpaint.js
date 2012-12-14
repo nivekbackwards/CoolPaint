@@ -286,8 +286,17 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'diff_match_patch'], function
 
 /*						MOUSE DOWN							*/
 	function mouseDownAttach() {
-		canvas.observe('mouse:down', function(e) {		});
+		canvas.observe('mouse:down', function(e) {
+			sendPatches();
+		});
 	}
+	
+/*						MOUSE DOWN							*/
+	function mouseMoveAttach() {
+		canvas.observe('mouse:down', function(e) {
+			sendPatches();
+		});
+	}	
     
 /*						MOUSE UP							*/
     function mouseUpAttach() {

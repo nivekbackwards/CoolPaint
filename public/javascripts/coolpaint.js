@@ -562,7 +562,6 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
         g = parseInt(g*(100-10)/100);
         b = parseInt(b*(100-10)/100);
 
-
         return getHex(r,g,b);
       };
 

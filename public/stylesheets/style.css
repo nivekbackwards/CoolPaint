@@ -179,3 +179,10 @@ left: 92px;
 #connectedUsers li:last-child:after{
 	content: "";
 }
+
+#userBoxTitle{
+	font-size: 200%;
+	font-family:	"Comic Sans MS",
+					"Brush Script MT",
+					cursive;
+}

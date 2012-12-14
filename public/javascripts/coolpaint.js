@@ -2,8 +2,8 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'diff_match_patch'], function
 
     var myName = null;
     var canvas;
-    var prevCanvasJSON;
-    var currCanvasJSON;
+    var prevCanvasJSON = "";
+    var currCanvasJSON = "";
 
     var rastaButton;
     var clearCanvasButton;

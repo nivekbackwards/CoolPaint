@@ -10,7 +10,7 @@ var patchLibrary = require('./jdp/diff_match_patch_uncompressed.js');
 var patcher = new patchLibrary.diff_match_patch();
 
 function WhiteboardState(){
-	this.currCanvasJSON = {};
+	this.currCanvasJSON = "";
 };
 
 WhiteboardState.prototype.makeChange = function(diff){

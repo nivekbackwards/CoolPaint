@@ -93,8 +93,8 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'diff_match_patch'], function
       rastaButton = $('#rastaButton');
       clearCanvasButton = $('#clearCanvasButton');
       prevCanvasJSON = JSON.stringify(canvas);
-      console.log("empty= " + prevCanvasJSON);
       currCanvasJSON = JSON.stringify(canvas);
+      
 
       mouseDownAttach();
       mouseUpAttach();
@@ -292,6 +292,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'diff_match_patch'], function
     function mouseUpAttach() {
      	canvas.observe('mouse:up', function(e) {
      		currCanvasJSON = JSON.stringify(canvas);
+     		console.log(typeof(prevCanvasJSON) + typeof(currCanvasJSON));
      		var patches = diff_match_patch.patch_make(prevCanvasJSON, currCanvasJSON);
      		console.log(patches);
      		socket.emit('canvasDiff', {patches: patches});

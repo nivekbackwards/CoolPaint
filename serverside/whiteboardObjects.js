@@ -1,18 +1,24 @@
 module.exports = WhiteboardState;
 
-var jsondiffpatch = require('./jdp/jsondiffpatch.min.js');
+/*
+var jsondiffpatch = require('./jdp/jsondiffpatch.js');
 jsondiffpatch.config.diff_match_patch = require('./jdp/diff_match_patch_uncompressed.js');
 jsondiffpatch.config.textDiffMinLength = 5;
+*/
+
+var jsonpatcher = require('./jdp/diff_match_patch_uncompressed.js');
 
 function WhiteboardState(){
-	this.currCanvasJSON = {};//'{"objects":[], "background":"rgba(0,0,0,0)"}';
+	this.currCanvasJSON = {};
 };
 
 WhiteboardState.prototype.makeChange = function(diff){
-	console.log('type of diff is [' + typeof(diff) + ']');
-	jsondiffpatch.patch(this.currCanvasJSON, diff);
+	var myPatches = diff;
+	console.log('type of patches is [' + typeof(myPatches) + '] ... it should be an array');
 
-	console.log('\n\n\nafter the change, the canvas is ' + this.currCanvasJSON + '\n\n\n');
+	jsonpatcher.patch_apply(myPatches, this.currCanvasJSON);
+
+	console.log('\n\n\nafter the change, the canvas is ' + JSON.stringify(this.currCanvasJSON) + '\n\n\n');
 };
 
 WhiteboardState.prototype.getCanvas = function(){

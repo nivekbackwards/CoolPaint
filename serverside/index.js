@@ -7,8 +7,6 @@ var chatMessageList		= new MessageListClass();
 var WhiteboardObjectsClass 	= require('./whiteboardObjects');
 var whiteboardState 		= new WhiteboardObjectsClass;
 
-//var idCounter = 0;
-
 exports.init = function (socket) {
 
 	socket.on('loginAttempt', function(data){
@@ -57,9 +55,10 @@ exports.init = function (socket) {
   	});
 
   	socket.on('canvasDiff', function(data){
-  		socket.broadcast.emit('canvasDiff', {diff: data.diff});
-  		whiteboardState.makeChange(data.diff);
+  		socket.broadcast.emit('canvasDiff', {patches: data.patches});
+  		whiteboardState.makeChange(data.patches);
   	});
+
 
 /*
   	socket.on('newObject', function(data){

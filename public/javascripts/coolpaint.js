@@ -12,6 +12,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'diff_match_patch'], function
     var textButton;
     var shapesButton;
     var widthButton;
+    var connectButton;
     var shapeSelectorButton;
     var colorPicker;
     var selected = null;
@@ -89,6 +90,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'diff_match_patch'], function
       widthButton   = $('#widthButton');
       shapeSelectorButton  = $('#shapeSelectorButton');
       colorPicker = $('#colorPicker');
+      connectButton = $('#connectButton');
       canvas = new fabric.Canvas('my-canvas');
       rastaButton = $('#rastaButton');
       clearCanvasButton = $('#clearCanvasButton');
@@ -260,6 +262,30 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'diff_match_patch'], function
             $('#chat-text-area').val('');
             socket.emit('chatMessage', {from: myName, message: theMessage, time:messageTime});
           }
+      });
+
+      connectButton.click(function() {
+        // var curSelectedObjects = new Array();
+        // curSelectedObjects = canvas.getObjects(canvas.getActiveGroup);
+
+        // var group = new fabric.Group();
+        var group = canvas.getActiveGroup();
+
+        // canvas.getActiveGroup().forEachObject(function(o){ 
+          // if(!group){
+          //   console.log("Lets make a group");
+          //   group = fabric.Group.fromObject(o.clone());
+          // }
+          // else{
+            // console.log("lets all go ot the movies")
+            // group.addWithUpdate(o.clone()); 
+          // }
+        // }); 
+
+        canvas.clear().renderAll();
+
+        canvas.add(group);
+
       });
 
       rastaButton.click(function() {

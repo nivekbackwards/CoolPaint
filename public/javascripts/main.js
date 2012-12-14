@@ -9,7 +9,7 @@ require(
              socketIO:      'require_socketIO',
              fabric:        'require_fabric',
              jscolor:       'require_jscolor',
-             diff_match_patch: 'diff_match_patch_uncompressed'
+             diff_match_patch: 'require_diffMatchPatch'//'rediff_match_patch_uncompressed'
            },
   },
   

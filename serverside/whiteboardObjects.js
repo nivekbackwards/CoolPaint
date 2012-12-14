@@ -9,6 +9,7 @@ jsondiffpatch.config.textDiffMinLength = 5;
 var jsonpatcher = require('./jdp/diff_match_patch_uncompressed.js');
 
 function WhiteboardState(){
+	//this.pather = new jsonpatcher();
 	this.currCanvasJSON = {};
 };
 

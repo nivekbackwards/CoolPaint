@@ -49,10 +49,13 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'diff_match_patch'], function
       console.log('we have jscolor?');
       console.log(JSON.stringify(jscolor));
 
-	  diffMatchPatch = new diff_match_patch();
-      console.log('we have diffpatch?');
-      console.log(diffMatchPatch.diff_main("{same:1, different: 2}", "{same: 1, different: 3}"));
-      console.log('tada!');
+	  //diffMatchPatch = new diff_match_patch();
+      //console.log('we have diffpatch?');
+      //console.log(diffMatchPatch.diff_main("{same:1, different: 2}", "{same: 1, different: 3}"));
+      //console.log('tada!');
+
+      console.log('le patcher');
+      console.log(diff_match_patch);
 
       
 		});

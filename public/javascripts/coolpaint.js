@@ -372,25 +372,19 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
           console.log('user [' + username + '] joined');
 
           addUser(username);
-          message += username + ' ';
+          message += username;
 
           if(i != otherUsers.length-1)
             message += ', ';
           if(otherUsers.length != 1 && i == otherUsers.length-2)
-            message += 'and '
-          if(i == otherUsers.length-2){
-            message += 'and '
-            
-          }
+            message += ' and ';
+        }
 
-          if(i == otherUsers.length - 1){
-            if(otherUsers.length == 1)
-            message += 'is';
-            else
-              message += 'are';
-            message += ' here now!';
-          }
-
+        if(otherUsers.length == 1)
+            message += ' is';
+        else{
+          message += ' are';
+          message += ' here now!';
         }
         
         var msgElt = createMessageElt(message);
@@ -412,12 +406,14 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
 
       socket.on('userLeft', function(data){
         var username = data.username;
+        if(username){
+          var infoElt = createMessageElt(username + ' has left the party');
+          infoElt.css('color', userColorMapping[username]);
+          displayChatMessage(infoElt);
 
-        var infoElt = createMessageElt(username + ' has left the party');
-        infoElt.css('color', userColorMapping[username]);
-        displayChatMessage(infoElt);
+          removeUser(data.username);
+        }
 
-        removeUser(data.username);
       });
 
     };
@@ -429,7 +425,6 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
           console.log('there is no color mapping so...');
           userColorMapping[username] = getRandomColor();
         }
-        console.log('color is ' + userColorMapping[username]);
 
         var newUserElt = $('<li>');
         newUserElt.attr('id', 'user_' + username);
@@ -444,33 +439,14 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
         console.log('user [' + username + '] left');
         var id = '#user_' + username;
         $(id).remove();
-        userColorMapping.username = undefined;
+        userColorMapping.username = null;
       }
     };
 
 
-/*
-    function togglePencilPicture(){
-      /*
-      var pencilPicture = pencilButton.attr('src');
-      var upPic = '/images/pencilUp.png';
-      var downPic = '/images/pencilDown.png';
-      if(pencilPicture === upPic)
-        pencilButton.attr('src', downPic);
-      else
-        pencilButton.attr('src', upPic);
-      */
-    //}
-/*
-    function displayInfoMessage(theMessage, color){
-      var messageObject = $('<li>');
-      messageObject.text(theMessage);
-      messageObject.css('visibility', 'hidden');
-      messageObject.css('color', color);
-      $('#message-list').append(messageObject);
-      makeElementMultiline(messageObject);
+    function formatTheThing(){
+
     };
-    */
 
     function createMessageElt(messagePayload, from, time){
       var messageObject = $('<li>');
@@ -628,11 +604,11 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
         var g = Math.floor(Math.random()*256);
         var b = Math.floor(Math.random()*256);
 
-        // darkens the color by 15%
-        var lightPercentage = 85;
-        r = parseInt(r*lightPercentage/100);
-        g = parseInt(g*lightPercentage/100);
-        b = parseInt(b*lightPercentage/100);
+        // darkens the color by 20%
+        var lightPercentage = .80;
+        r = parseInt(r*lightPercentage);
+        g = parseInt(g*lightPercentage);
+        b = parseInt(b*lightPercentage);
 
         return getHex(r,g,b);
       };
@@ -645,11 +621,7 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
       };
 
       function getHex(r,g,b){
-        console.log('r:' + r);
-        console.log('g:' + g);
-        console.log('b:' + b);
         var colorString = '#' + intToHex(r) + intToHex(g) + intToHex(b);
-        console.log('my number is [' + colorString + ']!');
         return colorString;
       };
 

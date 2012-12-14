@@ -1,4 +1,4 @@
-define(['jquery', 'fabric', 'socketIO', 'jscolor', 'diff_match_patch'], function($, fabric, socket, jscolor, diff_match_patch){
+define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric, socket, diff_match_patch){
 
     var myName = null;
     var canvas;
@@ -43,15 +43,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'diff_match_patch'], function
       loadImages();
       bindLoginThings();
       socketThings();
-
-
-      console.log('we have jscolor?');
-      console.log(JSON.stringify(jscolor));
-
-      console.log('we have diffpatch?');
-      console.log(diff_match_patch.diff_main("{same:1, different: 2}", "{same: 1, different: 3}"));
-      console.log('tada!');
-      
+     
 		});
 
     function loadImages(){
@@ -98,8 +90,6 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'diff_match_patch'], function
 
       mouseDownAttach();
       mouseUpAttach();
-
-      jscolor.bind();
 
 /*                     PENCIL BUTTON                     */
       pencilButton.bind('click', function() {

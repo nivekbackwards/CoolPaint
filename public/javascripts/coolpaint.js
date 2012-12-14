@@ -255,7 +255,7 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
           if(event.keyCode == 13){   // press Enter
             var theMessage = $('#chat-text-area').val();
             var messageTime = new Date();
-            displayChatMessage('Me', theMessage, messageTime);
+            displayChatMessage(createMessageElt(theMessage, 'Me', messageTime));
             $('#chat-text-area').val('');
             socket.emit('chatMessage', {from: myName, message: theMessage, time:messageTime});
           }
@@ -316,15 +316,15 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
       });
 
       socket.on('chatMessage', function(data){
-        console.log('received message ' + JSON.stringify(data));
-        displayChatMessage(data.from, data.message, new Date());
+        //console.log('received message ' + JSON.stringify(data));
+        displayChatMessage(createMessageElt(data.message, data.from, new Date()));
       });
 
       socket.on('messages', function(data){
         var messages = data.messageList;
         console.log('received lots of messages ' + JSON.stringify(messages));
         for(var i=0; i<messages.length; i++)
-          displayChatMessage(messages[i].from, messages[i].message, new Date());
+          displayChatMessage(createMessageElt( messages[i].message, messages[i].from, new Date() ));
       });
 
       socket.on('loginReject', function(){
@@ -347,17 +347,76 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
       });
 
       socket.on('users', function(data){
-        console.log('got a whole bunch of users {' + data.userList + '}');
-        for(var i=0; i<data.userList.length; i++){
-          addUser(data.userList[i]);
+        var userList = data.userList;
+
+        console.log('got a whole bunch of users {' + userList + '} ... (there are ' + userList.length + ')');
+        var message = '';
+
+        var otherUsers = [];
+
+        for(var i=0; i<userList.length; i++){
+          if(userList[i] !== myName)
+            otherUsers.push(userList[i]);
         }
+
+        var color;
+        if(otherUsers.length === 1){
+          color = userColorMapping[otherUsers[0]];
+          console.log('there is one user here and his color is [' + color + ']');
+        }
+        else
+          color = getRandomColor();
+
+        for(var i=0; i<otherUsers.length; i++){
+          var username = otherUsers[i];
+          console.log('user [' + username + '] joined');
+
+          addUser(username);
+          message += username + ' ';
+
+          if(i != otherUsers.length-1)
+            message += ', ';
+          if(otherUsers.length != 1 && i == otherUsers.length-2)
+            message += 'and '
+          if(i == otherUsers.length-2){
+            message += 'and '
+            
+          }
+
+          if(i == otherUsers.length - 1){
+            if(otherUsers.length == 1)
+            message += 'is';
+            else
+              message += 'are';
+            message += ' here now!';
+          }
+
+        }
+        
+        var msgElt = createMessageElt(message);
+        msgElt.css('color', color);
+        displayChatMessage(msgElt);
+
       });
 
       socket.on('userJoined', function(data){
-        addUser(data.username);
+        var username = data.username;
+        addUser(username);
+        
+        var infoElt = createMessageElt(username + ' has joined the party!');
+        infoElt.css('color', userColorMapping[username]);
+        displayChatMessage(infoElt);
+
+        
       }); 
 
       socket.on('userLeft', function(data){
+        var username = data.username;
+
+        var infoElt = createMessageElt(username + ' has left the party');
+        infoElt.css('color', userColorMapping[username]);
+        displayChatMessage(infoElt);
+
         removeUser(data.username);
       });
 
@@ -365,14 +424,18 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
 
     function addUser(username){
       if(username !== myName){      // because we don't want to draw our own name in the userlist...
-        userColorMapping[username] = getRandomColor();
-        console.log('user [' + username + '] joined');
+        console.log('adding [' + username + ']');
+        if(!userColorMapping[username]){
+          console.log('there is no color mapping so...');
+          userColorMapping[username] = getRandomColor();
+        }
+        console.log('color is ' + userColorMapping[username]);
+
         var newUserElt = $('<li>');
         newUserElt.attr('id', 'user_' + username);
         newUserElt.css('color', userColorMapping[username]);
         newUserElt.text(username);
         connectedUserList.append(newUserElt);
-        displayInfoMessage(username + ' has joined the party!', userColorMapping[username]);
       }
     };
 
@@ -381,7 +444,6 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
         console.log('user [' + username + '] left');
         var id = '#user_' + username;
         $(id).remove();
-        displayInfoMessage(username + ' has left the party', userColorMapping[username]);
         userColorMapping.username = undefined;
       }
     };
@@ -399,7 +461,7 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
         pencilButton.attr('src', upPic);
       */
     //}
-
+/*
     function displayInfoMessage(theMessage, color){
       var messageObject = $('<li>');
       messageObject.text(theMessage);
@@ -408,35 +470,44 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
       $('#message-list').append(messageObject);
       makeElementMultiline(messageObject);
     };
+    */
 
-    function displayChatMessage(from, theMessage, time){
-      var numHours;
-      var numMinutes;
-      if(time){
-        numHours = time.getHours();
-        numMinutes = time.getMinutes();
-      }
+    function createMessageElt(messagePayload, from, time){
       var messageObject = $('<li>');
-      messageObject.text('[' + numHours + ':' + numMinutes + '] ' + from + ': ' + theMessage);
-      if(from === 'Me'){
-        console.log('setting my message to [' + myColor + ']');
-        messageObject.css('color', myColor);
-      }
-      else
-        messageObject.css('color', userColorMapping[from]);
+      var messageText = "";      
 
+      if(time){
+        var numHours = time.getHours();
+        var numMinutes = time.getMinutes();
+        messageText += '[' + numHours + ':' + numMinutes + '] ';
+      }
+      if(from){
+        messageText += from + ': ';
+        if(!userColorMapping[from])
+          userColorMapping[from] = getRandomColor();
+        messageObject.css('color', userColorMapping[from]);
+      }
+
+      messageText += messagePayload;
+      messageObject.text(messageText);
+
+      return messageObject;
+    };
+
+    function displayChatMessage(messageObject){  
       messageObject.css('visibility', 'hidden');
       $('#message-list').append(messageObject);
-      makeElementMultiline(messageObject);
+      messageObject.text(addNewlines(messageObject.text()));
+      messageObject.css('visibility', 'visible');
+
+      $('#message-list').animate({
+        scrollTop: messageObject.offset().top
+      }, 0);
     }
 
     function makeElementMultiline(element){
       element.text(addNewlines(element.text()));
       element.css('visibility', 'visible');
-
-      $('#message-list').animate({
-        scrollTop: element.offset().top
-      }, 0);
     }
 
     function addNewlines(str){
@@ -557,10 +628,11 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
         var g = Math.floor(Math.random()*256);
         var b = Math.floor(Math.random()*256);
 
-        // darkens the color by 10%
-        r = parseInt(r*(100-10)/100);
-        g = parseInt(g*(100-10)/100);
-        b = parseInt(b*(100-10)/100);
+        // darkens the color by 15%
+        var lightPercentage = 85;
+        r = parseInt(r*lightPercentage/100);
+        g = parseInt(g*lightPercentage/100);
+        b = parseInt(b*lightPercentage/100);
 
         return getHex(r,g,b);
       };

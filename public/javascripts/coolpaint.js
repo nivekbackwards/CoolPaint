@@ -4,6 +4,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
     var canvas;
     var prevCanvasJSON;
     var currCanvasJSON;
+    var diffMatchPatch;
 
     var rastaButton;
     var clearCanvasButton;
@@ -47,9 +48,9 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
       console.log('we have jscolor?');
       console.log(JSON.stringify(jscolor));
 
-
+	  diffMatchPatch = new diff_match_patch();
       console.log('we have diffpatch?');
-      console.log(jsondiffpatch.diff({same:1, different: 2}, {same: 1, different: 3}));
+      console.log(diffMatchPatch.diff_main("{same:1, different: 2}", "{same: 1, different: 3}"));
       console.log('tada!');
       
 		});
@@ -292,10 +293,10 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
     function mouseUpAttach() {
      	canvas.observe('mouse:up', function(e) {
      		currCanvasJSON = JSON.stringify(canvas);
-     		var diff = jsondiffpatch.diff(prevCanvasJSON, currCanvasJSON);
-     		console.log(diff);
+     		var patches = diffMainPatches.patch_make(prevCanvasJSON, currCanvasJSON);
+     		console.log(patches);
 
-     		socket.emit('canvasDiff', {diff: diff});
+     		socket.emit('canvasDiff', {patches: patches});
      		prevCanvasJSON = currCanvasJSON;
      	});
      };
@@ -328,8 +329,8 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
       });
 
       socket.on('canvasDiff', function(data){
-        console.log('new canvasDiff received=' + data.diff );
-        jsondiffpatch.patch(currCanvasJSON, data.diff);
+        console.log('new canvasDiff received=' + data.patches );
+        currCanvasJSON = diffMatchPatch.patch_apply(data.patches, currCanvasJSON)[0];
         prevCanvasJSON = currCanvasJSON;
         canvas.loadFromJSON(currCanvasJSON);
       });

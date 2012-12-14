@@ -17,7 +17,7 @@ WhiteboardState.prototype.makeChange = function(diff){
 	var myPatches = diff;
 	console.log('type of patches is [' + typeof(myPatches) + '] ... it should be an array');
 
-	patcher.patch_apply(myPatches, this.currCanvasJSON);
+	this.currCanvasJSON = patcher.patch_apply(myPatches, this.currCanvasJSON)[0];
 
 	console.log('\n\n\nafter the change, the canvas is ' + JSON.stringify(this.currCanvasJSON) + '\n\n\n');
 };

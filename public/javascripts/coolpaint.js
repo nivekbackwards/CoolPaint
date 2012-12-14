@@ -359,9 +359,12 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
             otherUsers.push(userList[i]);
         }
 
+        if(otherUsers.length == 0)
+          return;
+
         var color;
         if(otherUsers.length === 1){
-          color = userColorMapping[otherUsers[0]];
+          color = userColorMapping[otherUsers[0]] = getRandomColor();
           console.log('there is one user here and his color is [' + color + ']');
         }
         else
@@ -374,20 +377,32 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
           addUser(username);
           message += username;
 
-          if(i != otherUsers.length-1)
-            message += ', ';
-          if(otherUsers.length != 1 && i == otherUsers.length-2)
-            message += ' and ';
+
+
+
+          if(otherUsers.length > 1){
+            if(i==0 && otherUsers.length == 2)
+                message += ' and ';
+              else{
+                if(i<otherUsers.length-1){
+                  message += ', ';
+                  if(i==otherUsers.length-2 && otherUsers.length > 2)
+                    message += 'and ';
+
+                }
+              }
+          }
+
         }
 
-        if(otherUsers.length == 1)
-            message += ' is';
-        else{
+        if(otherUsers.length > 1)
           message += ' are';
-          message += ' here now!';
-        }
+        else if(otherUsers.length == 1)
+          message += ' is';        
+        message += ' here now!';
         
         var msgElt = createMessageElt(message);
+        console.log('the color is ' + color)
         msgElt.css('color', color);
         displayChatMessage(msgElt);
 
@@ -441,11 +456,6 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
         $(id).remove();
         userColorMapping.username = null;
       }
-    };
-
-
-    function formatTheThing(){
-
     };
 
     function createMessageElt(messagePayload, from, time){

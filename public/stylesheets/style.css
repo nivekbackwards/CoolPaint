@@ -38,7 +38,7 @@ img {
   height: 420px;
   resize: none;
   list-style-type: none;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 #chat-text-area {
@@ -123,7 +123,7 @@ img {
 
 #optionButtons {
 	position: absolute;
-	left: 580px;
+	left: 830px;
 	top: -10px;
 }
 
@@ -143,4 +143,46 @@ width: 73px;
 height: 71px;
 top: 5px;
 left: 92px;
+}
+
+#connectedUsersBox{
+	top:0px;
+	left:420px;
+	position:absolute;
+}
+
+#connectedUsers{
+	border: 1px solid black;
+	list-style-type: none;
+	min-width: 20px;
+	min-height: 10px;
+
+	max-width: 330px;
+	max-height: 33px;
+	overflow: auto;
+	margin: 0px;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 1px;
+	padding-bottom: 1px;
+}
+
+#connectedUsers li{
+	display: block;
+	float: left;
+}
+
+#connectedUsers li:after{
+	content: ",\00a0";
+}
+
+#connectedUsers li:last-child:after{
+	content: "";
+}
+
+#userBoxTitle{
+	font-size: 200%;
+	font-family:	"Comic Sans MS",
+					"Brush Script MT",
+					cursive;
 }

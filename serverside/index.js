@@ -8,15 +8,19 @@ var WhiteboardObjectsClass 	= require('./whiteboardObjects');
 var whiteboardState 		= new WhiteboardObjectsClass;
 
 exports.init = function (socket) {
-
 	socket.on('loginAttempt', function(data){
 		console.log('user attempting to connect ' + JSON.stringify(data));
 		var username = data.username;
 		if(socketUserMapping.goodName(username)){									// if this username is valid
-			socketUserMapping.addUser(socket, username);								// add username to list
+			socketUserMapping.addUser(username, socket);								// add username to list
 			socket.emit('loginAllow', {yourName: username});							// allow client to login
 			socket.emit('messages', {messageList: chatMessageList.messageList});		// send client list of chat messages
 			socket.emit('canvasJSON', {canvas: whiteboardState.getCanvas()});		// send client current state of whiteboard
+			var datuserlist = socketUserMapping.getUserList();
+			console.log('sending list of users ' + JSON.stringify(datuserlist));
+			//socket.emit('users', {userList: socketUserMapping.getUserList()});
+			socket.emit('users', {userList: datuserlist});
+			socket.broadcast.emit('userJoined', {username: username});
 		}
 		else{																		// otherwise
 			socket.emit('loginReject');													// reject the login
@@ -47,7 +51,6 @@ exports.init = function (socket) {
 		}
 	});
 
-
   	socket.on('chatMessage', function (data) {
     	console.log('Received chat message: ' + JSON.stringify(data));
     	chatMessageList.addMessage(data.from, data.message, data.time);
@@ -57,41 +60,6 @@ exports.init = function (socket) {
   	socket.on('canvasDiff', function(data){
   		socket.broadcast.emit('canvasDiff', {patches: data.patches});
   		whiteboardState.makeChange(data.patches);
-  	});
-
-
-/*
-  	socket.on('newObject', function(data){
-  		console.log('received new object ' + JSON.stringify(data));
-  		socket.emit('newObjectID', {id: idCounter});
-  		var myObj = JSON.parse(data.object);
-  		if(myObj){
-  			myObj.id = idCounter;
-  			socket.broadcast.emit('newObject', {object: myObj});
-  			whiteboardState.addObject(data.object);
-  			idCounter++;
-  		}
-  		else
-  			console.log('for some reason this was called when no object was created');
-  	});
-
-  	socket.on('editObject', function(data){
-  		var id = data.id;
-  		var attrName = data.attrName;
-  		var attrValue = data.attrValue;
-
-  		whiteboardState.editObject(id, attrName, attrValue);
-		socket.broadcast.emit('editObject', {id: id, attrName: attrName, attrValue: attrValue});	  		
-  	});
-
-  	socket.on('removeObject', function(data){
-  		var id = data.id;
-  		whiteboardState.removeObject(id);
-  		socket.broadcast.emit('removeObject', {id: id});
-  	});
-*/
-
-
-  	
+  	});	
 
 };

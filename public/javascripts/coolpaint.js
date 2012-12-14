@@ -1,6 +1,10 @@
-define(['jquery', 'fabric', 'socketIO', 'jscolor', 'diff_match_patch'], function($, fabric, socket, jscolor, diff_match_patch){
+define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric, socket, diff_match_patch){
 
     var myName = null;
+    var myColor = getRandomColor();
+
+    var userColorMapping = {};
+
     var canvas;
     var prevCanvasJSON = "";
     var currCanvasJSON = "";
@@ -17,6 +21,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'diff_match_patch'], function
     var colorPicker;
     var selected = null;
     var chatTextArea;
+    var connectedUserList;
 
     var lineWidthPictures = [];
     var shapePictures = [];
@@ -43,16 +48,11 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'diff_match_patch'], function
 
       loadImages();
       bindLoginThings();
-      socketThings();
+      socketThings(); 
 
 
-      console.log('we have jscolor?');
-      console.log(JSON.stringify(jscolor));
-
-      console.log('we have diffpatch?');
-      console.log(diff_match_patch.diff_main("{same:1, different: 2}", "{same: 1, different: 3}"));
-      console.log('tada!');
-      
+      console.log('background color is');
+      console.log($(this).css('background-color'));
 		});
 
     function loadImages(){
@@ -82,26 +82,25 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'diff_match_patch'], function
     };
 
     function bindDrawThings(){
-      pencilButton  = $("#pencilButton");
-      chatTextArea  = $('#chat-text-area');
-      handButton    = $('#handButton');
-      textButton    = $('#textButton');
-      shapesButton  = $('#shapesButton');
-      widthButton   = $('#widthButton');
-      shapeSelectorButton  = $('#shapeSelectorButton');
-      colorPicker = $('#colorPicker');
-      connectButton = $('#connectButton');
+      pencilButton          = $("#pencilButton");
+      chatTextArea          = $('#chat-text-area');
+      handButton            = $('#handButton');
+      textButton            = $('#textButton');
+      shapesButton          = $('#shapesButton');
+      widthButton           = $('#widthButton');
+      connectedUserList     = $('#connectedUsers');
+      shapeSelectorButton   = $('#shapeSelectorButton');
+      colorPicker           = $('#colorPicker');
+      connectButton         = $('#connectButton');
+      rastaButton           = $('#rastaButton');
+      clearCanvasButton     = $('#clearCanvasButton');
       canvas = new fabric.Canvas('my-canvas');
-      rastaButton = $('#rastaButton');
-      clearCanvasButton = $('#clearCanvasButton');
       prevCanvasJSON = JSON.stringify(canvas);
       currCanvasJSON = JSON.stringify(canvas);
       
 
       mouseDownAttach();
       mouseUpAttach();
-
-      jscolor.bind();
 
 /*                     PENCIL BUTTON                     */
       pencilButton.bind('click', function() {
@@ -258,7 +257,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'diff_match_patch'], function
           if(event.keyCode == 13){   // press Enter
             var theMessage = $('#chat-text-area').val();
             var messageTime = new Date();
-            displayChatMessage('Me', theMessage, messageTime);
+            displayChatMessage(createMessageElt(theMessage, 'Me', messageTime));
             $('#chat-text-area').val('');
             socket.emit('chatMessage', {from: myName, message: theMessage, time:messageTime});
           }
@@ -302,10 +301,9 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'diff_match_patch'], function
         var answer = confirm("Are you sure you want to clear the canvas?")
         if (answer) {
           canvas.clear();
+          sendPatches();
         }
       });
-
-
 
     };
 
@@ -317,14 +315,20 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'diff_match_patch'], function
 /*						MOUSE UP							*/
     function mouseUpAttach() {
      	canvas.observe('mouse:up', function(e) {
-     		currCanvasJSON = JSON.stringify(canvas);
-     		console.log(typeof(prevCanvasJSON) + typeof(currCanvasJSON));
-     		var patches = diff_match_patch.patch_make(prevCanvasJSON, currCanvasJSON);
-     		console.log(patches);
-     		socket.emit('canvasDiff', {patches: patches});
-     		prevCanvasJSON = currCanvasJSON;
+			sendPatches();
      	});
      };
+     
+/*						SEND PATCHES							*/
+	function sendPatches() {
+		currCanvasJSON = JSON.stringify(canvas);
+   		console.log(typeof(prevCanvasJSON) + typeof(currCanvasJSON));
+    	var patches = diff_match_patch.patch_make(prevCanvasJSON, currCanvasJSON);
+    	console.log(patches);
+    	socket.emit('canvasDiff', {patches: patches});
+    	prevCanvasJSON = currCanvasJSON;
+    }
+	
 
     function socketThings() {
       socket.on('loginAllow', function(data){
@@ -338,15 +342,15 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'diff_match_patch'], function
       });
 
       socket.on('chatMessage', function(data){
-        console.log('received message ' + JSON.stringify(data));
-        displayChatMessage(data.from, data.message, new Date());
+        //console.log('received message ' + JSON.stringify(data));
+        displayChatMessage(createMessageElt(data.message, data.from, new Date()));
       });
 
       socket.on('messages', function(data){
         var messages = data.messageList;
         console.log('received lots of messages ' + JSON.stringify(messages));
         for(var i=0; i<messages.length; i++)
-          displayChatMessage(messages[i].from, messages[i].message, new Date());
+          displayChatMessage(createMessageElt( messages[i].message, messages[i].from, new Date() ));
       });
 
       socket.on('loginReject', function(){
@@ -367,36 +371,150 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'diff_match_patch'], function
       	prevCanvasJSON = currCanvasJSON;
       	canvas.loadFromJSON(currCanvasJSON);
       });
+
+      socket.on('users', function(data){
+        var userList = data.userList;
+
+        console.log('got a whole bunch of users {' + userList + '} ... (there are ' + userList.length + ')');
+        var message = '';
+
+        var otherUsers = [];
+
+        for(var i=0; i<userList.length; i++){
+          if(userList[i] !== myName)
+            otherUsers.push(userList[i]);
+        }
+
+        if(otherUsers.length == 0)
+          return;
+
+        var color;
+        if(otherUsers.length === 1){
+          color = userColorMapping[otherUsers[0]] = getRandomColor();
+          console.log('there is one user here and his color is [' + color + ']');
+        }
+        else
+          color = getRandomColor();
+
+        for(var i=0; i<otherUsers.length; i++){
+          var username = otherUsers[i];
+          console.log('user [' + username + '] joined');
+
+          addUser(username);
+          message += username;
+
+
+
+
+          if(otherUsers.length > 1){
+            if(i==0 && otherUsers.length == 2)
+                message += ' and ';
+              else{
+                if(i<otherUsers.length-1){
+                  message += ', ';
+                  if(i==otherUsers.length-2 && otherUsers.length > 2)
+                    message += 'and ';
+
+                }
+              }
+          }
+
+        }
+
+        if(otherUsers.length > 1)
+          message += ' are';
+        else if(otherUsers.length == 1)
+          message += ' is';        
+        message += ' here now!';
+        
+        var msgElt = createMessageElt(message);
+        console.log('the color is ' + color)
+        msgElt.css('color', color);
+        displayChatMessage(msgElt);
+
+      });
+
+      socket.on('userJoined', function(data){
+        var username = data.username;
+        addUser(username);
+        
+        var infoElt = createMessageElt(username + ' has joined the party!');
+        infoElt.css('color', userColorMapping[username]);
+        displayChatMessage(infoElt);
+
+        
+      }); 
+
+      socket.on('userLeft', function(data){
+        var username = data.username;
+        if(username){
+          var infoElt = createMessageElt(username + ' has left the party');
+          infoElt.css('color', userColorMapping[username]);
+          displayChatMessage(infoElt);
+
+          removeUser(data.username);
+        }
+
+      });
+
     };
 
+    function addUser(username){
+      if(username !== myName){      // because we don't want to draw our own name in the userlist...
+        console.log('adding [' + username + ']');
+        if(!userColorMapping[username]){
+          console.log('there is no color mapping so...');
+          userColorMapping[username] = getRandomColor();
+        }
 
-/*
-    function togglePencilPicture(){
-      /*
-      var pencilPicture = pencilButton.attr('src');
-      var upPic = '/images/pencilUp.png';
-      var downPic = '/images/pencilDown.png';
-      if(pencilPicture === upPic)
-        pencilButton.attr('src', downPic);
-      else
-        pencilButton.attr('src', upPic);
-      */
-    //}
-
-
-    function displayChatMessage(from, theMessage, time){
-      var numHours;
-      var numMinutes;
-      if(time){
-        numHours = time.getHours();
-        numMinutes = time.getMinutes();
+        var newUserElt = $('<li>');
+        newUserElt.attr('id', 'user_' + username);
+        newUserElt.css('color', userColorMapping[username]);
+        newUserElt.text(username);
+        connectedUserList.append(newUserElt);
       }
-      var messageObject = $('<li>');
-      messageObject.text('[' + numHours + ':' + numMinutes + '] ' + from + ': ' + theMessage);
+    };
 
+    function removeUser(username){
+      if(username !== null){
+        console.log('user [' + username + '] left');
+        var id = '#user_' + username;
+        $(id).remove();
+        userColorMapping.username = null;
+      }
+    };
+
+    function createMessageElt(messagePayload, from, time){
+      var messageObject = $('<li>');
+      var messageText = "";      
+
+      if(time){
+        var numHours = time.getHours();
+        var numMinutes = time.getMinutes();
+        messageText += '[' + numHours + ':' + numMinutes + '] ';
+      }
+      if(from){
+        messageText += from + ': ';
+        if(!userColorMapping[from])
+          userColorMapping[from] = getRandomColor();
+        messageObject.css('color', userColorMapping[from]);
+      }
+
+      messageText += messagePayload;
+      messageObject.text(messageText);
+
+      return messageObject;
+    };
+
+    function displayChatMessage(messageObject){  
       messageObject.css('visibility', 'hidden');
       $('#message-list').append(messageObject);
-      makeElementMultiline(messageObject);
+      messageObject.text(addNewlines(messageObject.text()));
+      messageObject.css('visibility', 'visible');
+
+      $('#message-list').animate({
+        scrollTop: messageObject.offset().top
+      }, 0);
     }
 
     function makeElementMultiline(element){
@@ -424,10 +542,6 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'diff_match_patch'], function
     }
     
 
-    
-
-    
-		
 		function pad(str, length) {
 			while (str.length < length) {
 				str = '0' + str;
@@ -520,12 +634,32 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'diff_match_patch'], function
     	updateComplexity();
    	 	};
 
-/*
-      var testObj = {
-        test:"hello from coolpaint module!"
+
+      function getRandomColor(){
+        var r = Math.floor(Math.random()*256);
+        var g = Math.floor(Math.random()*256);
+        var b = Math.floor(Math.random()*256);
+
+        // darkens the color by 20%
+        var lightPercentage = .80;
+        r = parseInt(r*lightPercentage);
+        g = parseInt(g*lightPercentage);
+        b = parseInt(b*lightPercentage);
+
+        return getHex(r,g,b);
       };
 
-      return testObj;
-      */
+      function intToHex(n){
+        n = n.toString(16);
+        if(n.length < 2)
+          n = "0"+n;
+        return n;
+      };
 
+      function getHex(r,g,b){
+        var colorString = '#' + intToHex(r) + intToHex(g) + intToHex(b);
+        return colorString;
+      };
+
+      
 });

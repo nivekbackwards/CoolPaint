@@ -6,10 +6,10 @@ jsondiffpatch.config.diff_match_patch = require('./jdp/diff_match_patch_uncompre
 jsondiffpatch.config.textDiffMinLength = 5;
 */
 
-var jsonpatcher = require('./jdp/diff_match_patch_uncompressed.js');
+var patchLibrary = require('./jdp/diff_match_patch_uncompressed.js');
+var patcher = new patchLibrary.diff_match_patch();
 
 function WhiteboardState(){
-	//this.pather = new jsonpatcher();
 	this.currCanvasJSON = {};
 };
 
@@ -17,7 +17,7 @@ WhiteboardState.prototype.makeChange = function(diff){
 	var myPatches = diff;
 	console.log('type of patches is [' + typeof(myPatches) + '] ... it should be an array');
 
-	jsonpatcher.patch_apply(myPatches, this.currCanvasJSON);
+	patcher.patch_apply(myPatches, this.currCanvasJSON);
 
 	console.log('\n\n\nafter the change, the canvas is ' + JSON.stringify(this.currCanvasJSON) + '\n\n\n');
 };

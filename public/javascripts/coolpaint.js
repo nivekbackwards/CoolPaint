@@ -1,4 +1,4 @@
-define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($, fabric, socket, jscolor, jsondiffpatch){
+define(['jquery', 'fabric', 'socketIO', 'jscolor', 'diff_match_patch'], function($, fabric, socket, jscolor, diff_match_patch){
 
     var myName = null;
     var canvas;
@@ -43,14 +43,6 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
       loadImages();
       bindLoginThings();
       socketThings();
-
-      console.log('we have jscolor?');
-      console.log(JSON.stringify(jscolor));
-
-
-      console.log('we have diffpatch?');
-      console.log(jsondiffpatch.diff({same:1, different: 2}, {same: 1, different: 3}));
-      console.log('tada!');
       
 		});
 
@@ -295,7 +287,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'jsondiffpatch'], function($,
      		var diff = jsondiffpatch.diff(prevCanvasJSON, currCanvasJSON);
      		console.log(diff);
 
-     		socket.emit('canvasDiff', {diff: diff});
+     		socket.emit('canvasDiff', {diff: JSON.stringify(diff)});
      		prevCanvasJSON = currCanvasJSON;
      	});
      };

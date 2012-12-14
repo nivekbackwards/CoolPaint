@@ -457,6 +457,7 @@
         
         console.log('original type of pname is [' + typeof(pname) + ']');
         console.log('original type of o     is [' + typeof(o) + ']');
+        console.log('original type of d     id [' + typeof(d) + ']');
 
         if (typeof pname != 'string') {
             path = d;

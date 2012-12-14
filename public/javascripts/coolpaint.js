@@ -276,6 +276,7 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'diff_match_patch'], function
         var answer = confirm("Are you sure you want to clear the canvas?")
         if (answer) {
           canvas.clear();
+          sendPatches();
         }
       });
 
@@ -291,14 +292,20 @@ define(['jquery', 'fabric', 'socketIO', 'jscolor', 'diff_match_patch'], function
 /*						MOUSE UP							*/
     function mouseUpAttach() {
      	canvas.observe('mouse:up', function(e) {
-     		currCanvasJSON = JSON.stringify(canvas);
-     		console.log(typeof(prevCanvasJSON) + typeof(currCanvasJSON));
-     		var patches = diff_match_patch.patch_make(prevCanvasJSON, currCanvasJSON);
-     		console.log(patches);
-     		socket.emit('canvasDiff', {patches: patches});
-     		prevCanvasJSON = currCanvasJSON;
+			sendPatches();
      	});
      };
+     
+/*						SEND PATCHES							*/
+	function sendPatches() {
+		currCanvasJSON = JSON.stringify(canvas);
+   		console.log(typeof(prevCanvasJSON) + typeof(currCanvasJSON));
+    	var patches = diff_match_patch.patch_make(prevCanvasJSON, currCanvasJSON);
+    	console.log(patches);
+    	socket.emit('canvasDiff', {patches: patches});
+    	prevCanvasJSON = currCanvasJSON;
+    }
+	
 
     function socketThings() {
       socket.on('loginAllow', function(data){

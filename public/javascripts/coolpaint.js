@@ -557,10 +557,11 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
         var g = Math.floor(Math.random()*256);
         var b = Math.floor(Math.random()*256);
 
-        // darkens the color by 20%
-        r = parseInt(r*(100-20)/100);
-        g = parseInt(g*(100-20)/100);
-        b = parseInt(b*(100-20)/100);
+        // darkens the color by 10%
+        r = parseInt(r*(100-10)/100);
+        g = parseInt(g*(100-10)/100);
+        b = parseInt(b*(100-10)/100);
+
 
         return getHex(r,g,b);
       };

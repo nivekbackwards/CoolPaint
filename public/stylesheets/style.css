@@ -123,7 +123,7 @@ img {
 
 #optionButtons {
 	position: absolute;
-	left: 580px;
+	left: 830px;
 	top: -10px;
 }
 
@@ -147,7 +147,7 @@ left: 92px;
 
 #connectedUsersBox{
 	top:0px;
-	left:500px;
+	left:420px;
 	position:absolute;
 }
 
@@ -157,7 +157,7 @@ left: 92px;
 	min-width: 20px;
 	min-height: 10px;
 
-	max-width: 400px;
+	max-width: 330px;
 	max-height: 45px;
 	overflow: auto;
 	margin: 0px;

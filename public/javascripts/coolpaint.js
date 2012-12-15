@@ -338,6 +338,7 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
 	           				arrObj[i].remove();
            				}
            		}
+           		sendPatches();
           	}
         });
     }

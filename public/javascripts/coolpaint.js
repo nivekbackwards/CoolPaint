@@ -273,17 +273,14 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
         // group.initialize(canvas.getObjects(canvas.getActiveGroup));
         var top = canvas.getActiveGroup().top;
         var left = canvas.getActiveGroup().left;
-        console.log(canvas.getActiveGroup());
-        console.log('top is ' + top);
-        console.log('left is ' + left); 
+
         canvas.getActiveGroup().forEachObject(function(o){ 
           if(o instanceof fabric.Group){
             o.forEachObject(function(o){
-              group.addWithUpdate(o);
+              group.addWithUpdate(o.clone());
               });
             canvas.remove(o);
           }
-          // }
           else{
             console.log("lets all go to the movies")
             group.addWithUpdate(o.clone()); 
@@ -291,17 +288,13 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
           }
         });
 
-        // group.center();
-
-        // canvas.clear().renderAll();
-
-        // var group = canvas.getActiveGroup().clone();
         group.set('top', top);
         group.set('left', left);
+        canvas.setActiveObject(group);
         canvas.add(group);
         // group.center();
 
-        // canvas.setActiveGroup(group);<
+
       });
 
       rastaButton.click(function() {

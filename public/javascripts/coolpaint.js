@@ -16,6 +16,7 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
     var textButton;
     var shapesButton;
     var widthButton;
+    var connectButton;
     var shapeSelectorButton;
     var colorPicker;
     var selected = null;
@@ -90,6 +91,7 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
       connectedUserList     = $('#connectedUsers');
       shapeSelectorButton   = $('#shapeSelectorButton');
       colorPicker           = $('#colorPicker');
+      connectButton         = $('#connectButton');
       rastaButton           = $('#rastaButton');
       clearCanvasButton     = $('#clearCanvasButton');
       canvas = new fabric.Canvas('my-canvas');
@@ -261,18 +263,48 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
           }
       });
 
+      connectButton.click(function() {
+        // var curSelectedObjects = new Array();
+        // curSelectedObjects = canvas.getObjects(canvas.getActiveGroup);
+
+        var group = new fabric.Group();
+        // var group;
+        // console.log(group);
+        // group.initialize(canvas.getObjects(canvas.getActiveGroup));
+
+        canvas.getActiveGroup().forEachObject(function(o){ 
+          if(o instanceof fabric.Group){
+            o.forEachObject(function(o){
+              group.addWithUpdate(o);
+              });
+            canvas.remove(o);
+          }
+          // }
+          else{
+            console.log("lets all go to the movies")
+            group.addWithUpdate(o.clone()); 
+            canvas.remove(o);
+          }
+        });
+
+        // group.center();
+
+        // canvas.clear().renderAll();
+
+        canvas.add(group);
+        group.center();
+        // canvas.setActiveGroup(group);
+      });
+
       rastaButton.click(function() {
-        var answer = confirm("Rasta-rize the image, mon?")
-        if (!answer || !fabric.Canvas.supports('toDataURL')) {
-          alert('This browser doesn\'t provide means to serialize canvas to an image');
-        }
-        else {
+        var answer = confirm("Rasta-rize the image, mon?", "Rasterization");
+        if (answer && fabric.Canvas.supports('toDataURL')) {
           window.open(canvas.toDataURL('png'));
         }
       });
 
       clearCanvasButton.click(function() {
-        var answer = confirm("Are you sure you want to clear the canvas?")
+        var answer = confirm("Are you sure you want to clear the canvas?", "Clear canvas?");
         if (answer) {
           canvas.clear();
           sendPatches();

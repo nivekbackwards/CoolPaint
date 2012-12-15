@@ -71,7 +71,7 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
       $('#nameBox').keyup(function(event){
         if(event.keyCode == 13){    // press Enter
           $('#loginButton').click();
-        }
+        } 
       });      
 
       $('#loginButton').bind('click', function(){
@@ -100,8 +100,10 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
       
 
       mouseDownAttach();
+      mouseMoveAttach();
       mouseUpAttach();
-
+      bindDelete();
+      
 /*                     PENCIL BUTTON                     */
       pencilButton.bind('click', function() {
         canvas.isDrawingMode = true;
@@ -313,11 +315,39 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
       });
 
     };
+    
+/*						DELETE								*/
+	function bindDelete(){
+		$(document).keyup(function(event){
+        	if(event.keyCode == 46){    // press Delete
+    			var obj = canvas.getActiveObject();
+    			console.log(obj);
+				if (obj !== null) {
+          			obj.remove();
+          		}  else {
+           				var arrObj = canvas.getActiveGroup().getObjects();
+           				console.log(arrObj);
+           				for (var i=0; i<arrObj.length; i++) {
+	           				arrObj[i].remove();
+           				}
+           		}
+          	}
+        });
+    }
 
 /*						MOUSE DOWN							*/
 	function mouseDownAttach() {
-		canvas.observe('mouse:down', function(e) {		});
+		canvas.observe('mouse:down', function(e) {
+			sendPatches();
+		});
 	}
+	
+/*						MOUSE DOWN							*/
+	function mouseMoveAttach() {
+		canvas.observe('mouse:down', function(e) {
+			sendPatches();
+		});
+	}	
     
 /*						MOUSE UP							*/
     function mouseUpAttach() {

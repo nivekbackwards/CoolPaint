@@ -276,19 +276,28 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
         var top = canvas.getActiveGroup().top;
         var left = canvas.getActiveGroup().left;
 
+        objArray = [];
+
         canvas.getActiveGroup().forEachObject(function(o){ 
           if(o instanceof fabric.Group){
-            o.forEachObject(function(o){
-              group.addWithUpdate(o.clone());
+            console.log("WE GOT A GROUP");
+            o.forEachObject(function(o2){
+              console.log("subObject");
+              // group.addWithUpdate(o2.clone());
+              objArray.push(o2.clone());
               });
             canvas.remove(o);
           }
           else{
             console.log("lets all go to the movies")
-            group.addWithUpdate(o.clone()); 
+            // group.addWithUpdate(o.clone()); 
+            objArray.push(o.clone());
             canvas.remove(o);
           }
         });
+
+        for(var i = 0; i < objArray.length; i++)
+          group.addWithUpdate(objArray[i]);
 
         group.set('top', top);
         group.set('left', left);

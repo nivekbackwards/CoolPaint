@@ -349,10 +349,13 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
 	function mouseDownAttach() {
 		canvas.observe('mouse:down', function(e) {
 			sendPatches();
+      if (selected === textButton){
+        console.log("Let's make some text");
+      }
 		});
 	}
 	
-/*						MOUSE DOWN							*/
+/*						MOUSE Move							*/
 	function mouseMoveAttach() {
 		canvas.observe('mouse:down', function(e) {
 			sendPatches();

@@ -350,9 +350,9 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
 		});
 	}
 	
-/*						MOUSE DOWN							*/
+/*						MOUSE MOVE							*/
 	function mouseMoveAttach() {
-		canvas.observe('mouse:down', function(e) {
+		canvas.observe('mouse:move', function(e) {
 			sendPatches();
 		});
 	}	

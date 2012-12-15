@@ -71,6 +71,11 @@ SocketUserMapping.prototype.goodName = function(username){
 		return false;
 	}
 
+	if(username === 'Me'){
+		console.log('user trying to login with name "Me", name rejected');
+		return false;
+	}
+
 	if(this.usernameInUse(username)){
 		console.log('BAD name -- username in use');
 		return false;

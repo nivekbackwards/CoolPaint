@@ -271,7 +271,11 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
         // var group;
         // console.log(group);
         // group.initialize(canvas.getObjects(canvas.getActiveGroup));
-
+        var top = canvas.getActiveGroup().top;
+        var left = canvas.getActiveGroup().left;
+        console.log(canvas.getActiveGroup());
+        console.log('top is ' + top);
+        console.log('left is ' + left); 
         canvas.getActiveGroup().forEachObject(function(o){ 
           if(o instanceof fabric.Group){
             o.forEachObject(function(o){
@@ -291,9 +295,13 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
 
         // canvas.clear().renderAll();
 
+        // var group = canvas.getActiveGroup().clone();
+        group.set('top', top);
+        group.set('left', left);
         canvas.add(group);
-        group.center();
-        // canvas.setActiveGroup(group);
+        // group.center();
+
+        // canvas.setActiveGroup(group);<
       });
 
       rastaButton.click(function() {

@@ -242,12 +242,14 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
     			var obj = canvas.getActiveObject();
     			console.log(obj);
 				if (obj !== null) {
-          			obj.remove();
+          console.log("single object");
+          			canvas.remove(obj);
           		}  else {
+                console.log("GROUP TIME");
            				var arrObj = canvas.getActiveGroup().getObjects();
            				console.log(arrObj);
            				for (var i=0; i<arrObj.length; i++) {
-	           				arrObj[i].remove();
+	           				canvas.remove(arrObj[i]);
            				}
            		}
            		sendPatches();

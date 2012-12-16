@@ -13,18 +13,15 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
     var clearCanvasButton;
     var pencilButton;
     var handButton;
-    var textButton;
-    var shapesButton;
     var widthButton;
     var connectButton;
-    var shapeSelectorButton;
     var colorPicker;
     var selected = null;
     var chatTextArea;
     var connectedUserList;
+    var textInput;
 
     var lineWidthPictures = [];
-    var shapePictures = [];
     
     var lastObj;
     var lineWidth = 3;
@@ -60,11 +57,6 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
       lineWidthPictures.push('/images/width2.png');
       lineWidthPictures.push('/images/width3.png');
       lineWidthPictures.push('/images/width4.png');
-
-      shapePictures.push('images/ovalUp.png');
-      shapePictures.push('images/squareUp.png');
-      shapePictures.push('images/triangleUp.png');
-      shapePictures.push('images/lineUp.png');
     };
 
     function bindLoginThings(){
@@ -85,11 +77,8 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
       pencilButton          = $("#pencilButton");
       chatTextArea          = $('#chat-text-area');
       handButton            = $('#handButton');
-      textButton            = $('#textButton');
-      shapesButton          = $('#shapesButton');
       widthButton           = $('#widthButton');
       connectedUserList     = $('#connectedUsers');
-      shapeSelectorButton   = $('#shapeSelectorButton');
       colorPicker           = $('#colorPicker');
       connectButton         = $('#connectButton');
       rastaButton           = $('#rastaButton');
@@ -160,61 +149,6 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
         handButton.attr('src', upPic);
       };
 
-
-/*                     SHAPES BUTTON                     */
-      shapesButton.bind('click', function(){
-          console.log("clicking shapes doesn't do anything!!!");
-          // actually do something with this shapes click
-          if(selected !== null && selected !== shapesButton)
-          selected.toggleOff();
-        shapesButton.toggleOn();
-
-        //Clear the options menu, then move the shape options up
-        $('#optionButtons .option').appendTo($('#hiddenOptionButtons'));
-        $('#hiddenOptionButtons #widthButton').appendTo($('#optionButtons'));
-        $('#hiddenOptionButtons #shapeSelectorButton').appendTo($('#optionButtons'));
-        $('#hiddenOptionButtons #shapeOuterColor').appendTo($('#optionButtons'));
-        $('#hiddenOptionButtons #shapeInnerColor').appendTo($('#optionButtons'));
-
-      });
-
-      shapesButton.toggleOn = function(){
-        var downPic = '/images/shapesDown.png';
-        if(shapesButton !== selected){
-          selected = shapesButton;
-          shapesButton.attr('src', downPic);
-        }
-      };
-
-      shapesButton.toggleOff = function(){
-        var upPic = '/images/shapesUp.png';
-        shapesButton.attr('src', upPic);
-      };
-
-
-/*                     TEXT BUTTON                     */
-      textButton.bind('click', function(){
-        // actually do something when text is clicked
-        console.log("clicking text doesn't do anything!");
-        if(selected !== null && selected !== textButton)
-          selected.toggleOff();
-        textButton.toggleOn();
-
-        $('#optionButtons .option').appendTo($('#hiddenOptionButtons'));
-      });
-
-      textButton.toggleOn = function(){
-        var downPic = '/images/textDown.png';
-        if(textButton !== selected){
-          selected = textButton;
-          textButton.attr('src', downPic);
-        }
-      };
-
-      textButton.toggleOff = function(){
-        var upPic = '/images/textUp.png';
-        textButton.attr('src', upPic);
-      }
       
 /*						COLOR PICKER					*/
 	  colorPicker.change(function() {
@@ -240,30 +174,6 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
         lineWidth = 2 * currWidthImageIdx + 1;
         canvas.freeDrawingLineWidth = lineWidth;
       };
-
-
-/*                     SHAPE SELECTOR BUTTON                     */      
-      var currShapeIdx = 0;
-      shapeSelectorButton.bind('click', function(){
-        // actually do something when shape selector is clicked!
-        console.log("changing shapes doesn't actually do anything!!!");
-        shapeSelectorButton.cycle();
-      });
-
-      shapeSelectorButton.cycle = function(){
-        currShapeIdx = (currShapeIdx + 1) % shapePictures.length;
-        shapeSelectorButton.attr('src', shapePictures[currShapeIdx]);
-      };
-
-      chatTextArea.keyup(function(event){
-          if(event.keyCode == 13){   // press Enter
-            var theMessage = $('#chat-text-area').val();
-            var messageTime = new Date();
-            displayChatMessage(createMessageElt(theMessage, 'Me', messageTime));
-            $('#chat-text-area').val('');
-            socket.emit('chatMessage', {from: myName, message: theMessage, time:messageTime});
-          }
-      });
 
       connectButton.click(function() {
         // var curSelectedObjects = new Array();
@@ -349,9 +259,6 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
 	function mouseDownAttach() {
 		canvas.observe('mouse:down', function(e) {
 			sendPatches();
-      if (selected === textButton){
-        console.log("Let's make some text");
-      }
 		});
 	}
 	
@@ -392,7 +299,6 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
       });
 
       socket.on('chatMessage', function(data){
-        //console.log('received message ' + JSON.stringify(data));
         displayChatMessage(createMessageElt(data.message, data.from, new Date()));
       });
 
@@ -610,10 +516,6 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
 	  var getRandomInt = fabric.util.getRandomInt;
     	
 
-    	
-    	
-
-  		
   		var clearCanvasEl = document.getElementById('clear-canvas');
   		
   		clearCanvasEl.onclick = function() {
@@ -621,69 +523,6 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
           		canvas.clear();
         	}
         };
-        
-        //var mode = selectMode;
-		
-		var addRectEl = document.getElementById('rect');
-		
-		
-		addRectEl.onclick = function() {
-			//mode = rectMode;
-			canvas.add(new fabric.Rect({
-          		left: getRandomInt(50, 550),
-      			top: getRandomInt(50, 350),
-          		fill: '#' + getRandomColor(),
-          		width: 50,
-          		height: 50,
-          		opacity: 0.8
-        	}));
-        };
-        
-        var addCircleEl = document.getElementById('circle');
-        
-        addCircleEl.onclick = function() {
-        	  canvas.add(new fabric.Circle({
-          		left: getRandomInt(50, 550),
-      			top: getRandomInt(50, 350),
-          		fill: '#' + getRandomColor(),
-          		radius: 50,
-          		opacity: 0.8
-        	}));
-        };
-        
-        var addTriangleEl = document.getElementById('triangle');
-        
-        addTriangleEl.onclick = function() {
-        	canvas.add(new fabric.Triangle({
-          		left: getRandomInt(50, 550),
-      			top: getRandomInt(50, 350),
-          		fill: '#' + getRandomColor(),
-          		width: 50,
-          		height: 50,
-          		opacity: 0.8
-        	}));
-        };
-        
-        var addTextEl = document.getElementById('text');
-        
-        var text = 'Lorem ipsum dolor sit amet,\nconsectetur adipisicing elit,\nsed do eiusmod tempor incididunt\nut labore et dolore magna aliqua.\n' +
-    'Ut enim ad minim veniam,\nquis nostrud exercitation ullamco\nlaboris nisi ut aliquip ex ea commodo consequat.';
-        
-        addTextEl.onclick = function() {
-        	var textSample = new fabric.Text(text.slice(0, getRandomInt(0, text.length)), {
-      			left: getRandomInt(50, 550),
-      			top: getRandomInt(50, 450),
-      			fontFamily: 'helvetica',
-      			angle: getRandomInt(-10, 10),
-      			fill: '#' + getRandomColor(),
-      			scaleX: 0.5,
-      			scaleY: 0.5,
-      			fontWeight: ''
-    		});
-    	canvas.add(textSample);
-    	updateComplexity();
-   	 	};
-
 
       function getRandomColor(){
         var r = Math.floor(Math.random()*256);
@@ -710,6 +549,4 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
         var colorString = '#' + intToHex(r) + intToHex(g) + intToHex(b);
         return colorString;
       };
-
-      
 });

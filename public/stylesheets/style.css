@@ -186,3 +186,23 @@ left: 92px;
 					"Brush Script MT",
 					cursive;
 }
+
+#textBox {
+
+	position: absolute;
+	left: 700px;
+	top: 350px;/*
+	border: solid;
+	border-radius: 45px;
+	width: 320px;
+	background-color: gray;
+	height: 80px;*/
+	visibility: hidden;
+}
+
+#textInput {
+	font-family: helvetica;
+	font-size: 42px;
+	height:80px;
+	border: none;
+}

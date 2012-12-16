@@ -10,7 +10,7 @@ a {
 }
 
 img {
-	padding: 5px;
+	padding: 15px;
 }
 
 .center{
@@ -98,7 +98,7 @@ img {
 #buttonHolder {
 	position: relative;
 	top: 570px;
-	left: -40px;
+	left: 30px;
 }
 
 #coolpaintLogo {
@@ -185,24 +185,4 @@ left: 92px;
 	font-family:	"Comic Sans MS",
 					"Brush Script MT",
 					cursive;
-}
-
-#textBox {
-
-	position: absolute;
-	left: 700px;
-	top: 350px;/*
-	border: solid;
-	border-radius: 45px;
-	width: 320px;
-	background-color: gray;
-	height: 80px;*/
-	visibility: hidden;
-}
-
-#textInput {
-	font-family: helvetica;
-	font-size: 42px;
-	height:80px;
-	border: none;
 }

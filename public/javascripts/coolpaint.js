@@ -260,18 +260,15 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
 		canvas.observe('mouse:down', function(e) {
 			sendPatches();
 		});
-	}
+	};
 	
-<<<<<<< HEAD
-/*						MOUSE Move							*/
-=======
+
 /*						MOUSE MOVE							*/
->>>>>>> 4a7514e6d91ac5fdbce2ea6b4395369bbd82f230
 	function mouseMoveAttach() {
 		canvas.observe('mouse:move', function(e) {
 			sendPatches();
 		});
-	}	
+	};
     
 /*						MOUSE UP							*/
     function mouseUpAttach() {

@@ -27,7 +27,6 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
   var lineWidth = 3;
   var color = 'FFFFFF'
 
-
   $.fn.textWidth = function(){
     var html_org = $(this).html();
     var html_calc = '<span>' + html_org + '</span>';
@@ -66,6 +65,10 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
       socket.emit('loginAttempt', {username: username});
     });
   };
+
+
+
+  
 
   function bindDrawThings(){
     pencilButton          = $("#pencilButton");
@@ -146,7 +149,6 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
     
     /*						COLOR PICKER					*/
     colorPicker.change(function() {
-      console.log('colorPicker change');
       color = colorPicker.val();
       canvas.freeDrawingColor = color;
     });
@@ -494,15 +496,6 @@ function getRandomColor() {
 }
 
 var getRandomInt = fabric.util.getRandomInt;
-
-
-var clearCanvasEl = document.getElementById('clear-canvas');
-
-clearCanvasEl.onclick = function() {
- if (confirm('Are you sure?')) {
-  canvas.clear();
-}
-};
 
 function getRandomColor(){
   var r = Math.floor(Math.random()*256);

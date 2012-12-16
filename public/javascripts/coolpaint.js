@@ -38,18 +38,12 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
     };
 
     $(function () {
-      console.log("hello from coolapint.js ready handler");
-      console.log('initializing connection on client');
-
       $(this).scrollTop(0);
 
       loadImages();
       bindLoginThings();
       socketThings(); 
 
-
-      console.log('background color is');
-      console.log($(this).css('background-color'));
 		});
 
     function loadImages(){
@@ -282,9 +276,7 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
 /*						SEND PATCHES							*/
 	function sendPatches() {
 		currCanvasJSON = JSON.stringify(canvas);
-   		console.log(typeof(prevCanvasJSON) + typeof(currCanvasJSON));
     	var patches = diff_match_patch.patch_make(prevCanvasJSON, currCanvasJSON);
-    	console.log(patches);
     	socket.emit('canvasDiff', {patches: patches});
     	prevCanvasJSON = currCanvasJSON;
     }
@@ -307,7 +299,6 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
 
       socket.on('messages', function(data){
         var messages = data.messageList;
-        console.log('received lots of messages ' + JSON.stringify(messages));
         for(var i=0; i<messages.length; i++)
           displayChatMessage(createMessageElt( messages[i].message, messages[i].from, new Date() ));
       });
@@ -317,15 +308,12 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
       });
 
       socket.on('canvasDiff', function(data){
-        console.log('new canvasDiff received=' + data.patches );
         currCanvasJSON = diff_match_patch.patch_apply(data.patches, currCanvasJSON)[0];
         prevCanvasJSON = currCanvasJSON;
         canvas.loadFromJSON(currCanvasJSON);
       });
       
       socket.on('canvasJSON', function(data) {
-        console.log('received new canvas!!!');
-        //console.log(data.canvas);
       	currCanvasJSON = data.canvas;
       	prevCanvasJSON = currCanvasJSON;
       	canvas.loadFromJSON(currCanvasJSON);
@@ -334,7 +322,6 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
       socket.on('users', function(data){
         var userList = data.userList;
 
-        console.log('got a whole bunch of users {' + userList + '} ... (there are ' + userList.length + ')');
         var message = '';
 
         var otherUsers = [];

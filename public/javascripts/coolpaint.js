@@ -280,9 +280,8 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
 /*						SEND PATCHES							*/
 	function sendPatches() {
 		currCanvasJSON = JSON.stringify(canvas);
-   		console.log(typeof(prevCanvasJSON) + typeof(currCanvasJSON));
     	var patches = diff_match_patch.patch_make(prevCanvasJSON, currCanvasJSON);
-    	console.log(patches);
+    	//console.log(patches);
     	socket.emit('canvasDiff', {patches: patches});
     	prevCanvasJSON = currCanvasJSON;
     }

@@ -157,8 +157,6 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
       var currWidthImageIdx = 1;
       canvas.freeDrawingLineWidth = lineWidth;
       widthButton.bind('click', function(){
-        // actually do something when width button is clicked
-        console.log("clicking width doesn't do anything");
         widthButton.cycle();
       });
 
@@ -170,13 +168,8 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
       };
 
       connectButton.click(function() {
-        // var curSelectedObjects = new Array();
-        // curSelectedObjects = canvas.getObjects(canvas.getActiveGroup);
 
         var group = new fabric.Group();
-        // var group;
-        // console.log(group);
-        // group.initialize(canvas.getObjects(canvas.getActiveGroup));
         var top = canvas.getActiveGroup().top;
         var left = canvas.getActiveGroup().left;
 
@@ -184,17 +177,12 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
 
         canvas.getActiveGroup().forEachObject(function(o){ 
           if(o instanceof fabric.Group){
-            console.log("WE GOT A GROUP");
             o.forEachObject(function(o2){
-              console.log("subObject");
-              // group.addWithUpdate(o2.clone());
               objArray.push(o2.clone());
               });
             canvas.remove(o);
           }
           else{
-            console.log("lets all go to the movies")
-            // group.addWithUpdate(o.clone()); 
             objArray.push(o.clone());
             canvas.remove(o);
           }
@@ -207,9 +195,6 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
         group.set('left', left);
         canvas.setActiveObject(group);
         canvas.add(group);
-        // group.center();
-
-
       });
 
       rastaButton.click(function() {
@@ -234,14 +219,10 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
 		$(document).keyup(function(event){
         	if(event.keyCode == 46){    // press Delete
     			var obj = canvas.getActiveObject();
-    			console.log(obj);
 				if (obj !== null) {
-          console.log("single object");
           			canvas.remove(obj);
           		}  else {
-                console.log("GROUP TIME");
            				var arrObj = canvas.getActiveGroup().getObjects();
-           				console.log(arrObj);
            				for (var i=0; i<arrObj.length; i++) {
 	           				canvas.remove(arrObj[i]);
            				}
@@ -277,7 +258,6 @@ define(['jquery', 'fabric', 'socketIO', 'diff_match_patch'], function($, fabric,
 	function sendPatches() {
 		currCanvasJSON = JSON.stringify(canvas);
     	var patches = diff_match_patch.patch_make(prevCanvasJSON, currCanvasJSON);
-    	//console.log(patches);
     	socket.emit('canvasDiff', {patches: patches});
     	prevCanvasJSON = currCanvasJSON;
     }

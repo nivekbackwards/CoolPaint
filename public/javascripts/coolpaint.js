@@ -398,12 +398,10 @@ socket.on('userLeft', function(data){
 };
 
 function addUser(username){
-      if(username !== myName){      // because we don't want to draw our own name in the userlist...
-        console.log('adding [' + username + ']');
-      if(!userColorMapping[username]){
-        console.log('there is no color mapping so...');
+    if(username !== myName){      // because we don't want to draw our own name in the userlist...
+
+      if(!userColorMapping[username])
         userColorMapping[username] = getRandomColor();
-      }
 
       var newUserElt = $('<li>');
       newUserElt.attr('id', 'user_' + username);

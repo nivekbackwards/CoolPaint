@@ -1,6 +1,6 @@
 {
     "name": "CoolPaint",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"engines" : {
 		"node": "0.8.14",
 		"npm" : "1.1.x"
